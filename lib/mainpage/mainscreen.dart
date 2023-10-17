@@ -8,7 +8,6 @@ import 'package:demoapp/dashboard_pages/search.dart';
 import 'package:demoapp/dashboard_pages/settings.dart';
 import 'package:demoapp/dashboard_pages/wishlist.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/services.dart';
 
 class MainScreen extends StatefulWidget {
@@ -103,7 +102,7 @@ class _MainScreenState extends State<MainScreen> {
         appBar: AppBar(
           toolbarHeight: 60.0,
           title: const Text(
-            "Venus Inc.",
+            "Venus (India) Inc.",
             style: TextStyle(
               fontSize: 22.0,
               fontWeight: FontWeight.bold,
@@ -112,7 +111,7 @@ class _MainScreenState extends State<MainScreen> {
           actions: <Widget>[
             Padding(
               padding: const EdgeInsets.symmetric(
-                horizontal: 8.0,
+                horizontal: 18.0,
                 vertical: 2.0,
               ),
               child: GestureDetector(
@@ -134,23 +133,20 @@ class _MainScreenState extends State<MainScreen> {
                 },
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 18.0,
-                vertical: 2.0,
-              ),
-              child: GestureDetector(
-                child: const Tooltip(
-                  triggerMode: TooltipTriggerMode.longPress,
-                  message: "Help",
-                  child: Icon(
-                    Icons.help_outlined,
-                    size: 25.0,
-                  ),
-                ),
-                onTap: () {},
-              ),
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(
+            //     horizontal: 18.0,
+            //     vertical: 2.0,
+            //   ),
+            //   child: GestureDetector(
+            //     child: const Tooltip(
+            //       triggerMode: TooltipTriggerMode.longPress,
+            //       message: "Help",
+            //       child: Text("Help"),
+            //     ),
+            //     onTap: () {},
+            //   ),
+            // ),
           ],
           flexibleSpace: Container(
             decoration: BoxDecoration(
@@ -196,24 +192,8 @@ class _MainScreenState extends State<MainScreen> {
           },
           barHeight: 75.0,
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            _launchUrl();
-          },
-          backgroundColor: Colors.green.shade100,
-          child: Image.asset(
-            "assets/images/what.png",
-            width: 30.0,
-          ),
-        ),
       ),
     );
-  }
-
-  Future<void> _launchUrl() async {
-    if (!await launchUrl(Uri.parse("https://wa.me/919168202971"))) {
-      throw Exception('Could not launch');
-    }
   }
 
   @override

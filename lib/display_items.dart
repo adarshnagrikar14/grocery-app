@@ -1,7 +1,8 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, library_private_types_in_public_api
 
 import 'dart:async';
 
+import 'package:chips_choice/chips_choice.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -134,7 +135,17 @@ class _DisplayItemPageState extends State<DisplayItemPage> {
               ),
               RoundedBorderButton(
                 onTap: () {
-                  addToWishlist();
+                  // addToWishlist();
+                  showModalBottomSheet(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return SizeFilter(
+                        onFilterApplied: (sizeSelected) {
+                          addToWishlist(sizeSelected);
+                        },
+                      );
+                    },
+                  );
                 },
                 text: "Add to Wishlist",
               ),
@@ -171,7 +182,7 @@ class _DisplayItemPageState extends State<DisplayItemPage> {
                   children: [
                     Expanded(
                       child: Chip(
-                        label: const Text("Fetaure 1"),
+                        label: const Text("Feature 1"),
                         avatar: const Icon(
                           Icons.check,
                           color: Colors.green,
@@ -188,7 +199,7 @@ class _DisplayItemPageState extends State<DisplayItemPage> {
                           right: 8.0,
                         ),
                         child: Chip(
-                          label: const Text("Fetaure 2"),
+                          label: const Text("Feature 2"),
                           avatar: const Icon(
                             Icons.check,
                             color: Colors.green,
@@ -201,7 +212,7 @@ class _DisplayItemPageState extends State<DisplayItemPage> {
                     ),
                     Expanded(
                       child: Chip(
-                        label: const Text("Fetaure 3"),
+                        label: const Text("Feature 3"),
                         avatar: const Icon(
                           Icons.check,
                           color: Colors.green,
@@ -223,7 +234,7 @@ class _DisplayItemPageState extends State<DisplayItemPage> {
                   children: [
                     Expanded(
                       child: Chip(
-                        label: const Text("Fetaure 4"),
+                        label: const Text("Feature 4"),
                         avatar: const Icon(
                           Icons.check,
                           color: Colors.green,
@@ -237,7 +248,7 @@ class _DisplayItemPageState extends State<DisplayItemPage> {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: Chip(
-                          label: const Text("Fetaure 5"),
+                          label: const Text("Feature 5"),
                           avatar: const Icon(
                             Icons.check,
                             color: Colors.green,
@@ -250,7 +261,7 @@ class _DisplayItemPageState extends State<DisplayItemPage> {
                     ),
                     Expanded(
                       child: Chip(
-                        label: const Text("Fetaure 6"),
+                        label: const Text("Feature 6"),
                         avatar: const Icon(
                           Icons.check,
                           color: Colors.green,
@@ -295,8 +306,8 @@ class _DisplayItemPageState extends State<DisplayItemPage> {
     );
   }
 
-  void addToWishlist() async {
-    await saveToSharedPreferences(imageUrl, prodName);
+  void addToWishlist(String string) async {
+    await saveToSharedPreferences(imageUrl, prodName, string);
 
     showDialog(
       context: context,
@@ -315,15 +326,16 @@ class _DisplayItemPageState extends State<DisplayItemPage> {
     );
   }
 
-  Future<void> saveToSharedPreferences(String imageUrl, String title) async {
+  Future<void> saveToSharedPreferences(
+      String imageUrl, String title, String string) async {
     setState(() {
       isAddingToWishlist = true;
     });
 
     final prefs = await SharedPreferences.getInstance();
-    List<String> wishlist = prefs.getStringList('Wishlist') ?? [];
-    wishlist.add('$imageUrl;$title');
-    await prefs.setStringList('Wishlist', wishlist);
+    List<String> wishlist = prefs.getStringList('Wishlist2') ?? [];
+    wishlist.add('$imageUrl;$title;$string');
+    await prefs.setStringList('Wishlist2', wishlist);
 
     // dismiss indicartor
     Timer(
@@ -407,6 +419,176 @@ class _DisplayItemPageState extends State<DisplayItemPage> {
         );
       },
     );
+  }
+}
+
+class SizeFilter extends StatefulWidget {
+  final Function(String) onFilterApplied;
+
+  const SizeFilter({
+    required this.onFilterApplied,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  _SizeFilterState createState() => _SizeFilterState();
+}
+
+class _SizeFilterState extends State<SizeFilter> {
+  List<String> optionSize = [
+    "Small",
+    "Medium",
+    "Large",
+  ];
+
+  List<String> selectedSize = [];
+
+  @override
+  void initState() {
+    super.initState();
+    selectedSize = [optionSize[0]];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 300.0,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            flex: 1,
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Center(
+                child: Container(
+                  width: 60.0,
+                  height: 5.0,
+                  decoration: BoxDecoration(
+                    color: Colors.grey,
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Padding(
+              padding: const EdgeInsets.only(
+                // top: 12.0,
+                left: 3.0,
+              ),
+              child: ListTile(
+                title: const Text("Add required Size"),
+                trailing: IconButton(
+                  icon: const Icon(
+                    Icons.close,
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 4,
+            child: SizedBox(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    left: 19.0,
+                    right: 18.0,
+                    top: 20.0,
+                    bottom: 20.0,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: 1.0,
+                        color: Colors.grey,
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.only(top: 10.0),
+                        child: Text(
+                          "Size",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15.0,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                      ChipsChoice<String>.single(
+                        value: selectedSize.isNotEmpty ? selectedSize[0] : null,
+                        onChanged: (val) {
+                          setState(() {
+                            selectedSize = [val];
+                          });
+                        },
+                        choiceStyle: C2ChipStyle.filled(
+                          color: Colors.white,
+                          checkmarkColor: Colors.green.shade900,
+                          selectedStyle: C2ChipStyle.filled(
+                            color: Colors.green.shade100,
+                          ),
+                        ),
+                        choiceCheckmark: true,
+                        choiceItems: C2Choice.listFrom<String, String>(
+                          source: optionSize,
+                          value: (i, v) => v,
+                          label: (i, v) => v,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Padding(
+              padding: const EdgeInsets.only(
+                top: 8.0,
+                bottom: 10.0,
+                left: 15.0,
+                right: 15.0,
+              ),
+              child: SizedBox(
+                height: 50.0,
+                width: MediaQuery.of(context).size.width,
+                child: OutlinedButton(
+                  onPressed: () {
+                    applyFilter();
+                  },
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(color: Colors.green.shade800),
+                    backgroundColor: Colors.green.shade300,
+                  ),
+                  child: const Text(
+                    "Add to Wishlist",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18.0,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void applyFilter() {
+    widget.onFilterApplied(selectedSize[0]);
+    Navigator.pop(context);
   }
 }
 

@@ -1,10 +1,13 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:chips_choice/chips_choice.dart';
 import 'package:demoapp/display_items.dart';
+import 'package:demoapp/listitems/show_more.dart';
 import 'package:demoapp/types/plates.dart';
 import 'package:demoapp/types/container.dart';
 import 'package:demoapp/types/tissues.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -39,400 +42,436 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // corousel image slider
-            Padding(
-              padding: const EdgeInsets.only(top: 30.0),
-              child: CarouselSlider(
-                options: CarouselOptions(
-                  height: 200.0,
-                  enlargeCenterPage: true,
-                  enlargeFactor: 0.3,
-                  enlargeStrategy: CenterPageEnlargeStrategy.scale,
-                  autoPlay: true,
-                  autoPlayInterval: const Duration(seconds: 2),
-                ),
-                items: imageUrls.map(
-                  (imageUrl) {
-                    return Builder(
-                      builder: (BuildContext context) {
-                        return SizedBox(
-                          width: MediaQuery.of(context).size.width,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(15.0),
-                            child: Image.network(
-                              imageUrl,
-                              width: 300.0,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                ).toList(),
-              ),
-            ),
-            // categories
-            const Padding(
-              padding: EdgeInsets.only(
-                top: 30.0,
-                left: 25.0,
-              ),
-              child: Text(
-                "Categories",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 17.0,
-                ),
-              ),
-            ),
-            // items
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  Column(
-                    children: [
-                      RoundedImage(
-                        imageUrl: "assets/images/plate.png",
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  const PlatesPage(type: "Plates"),
-                            ),
-                          );
-                        },
-                        size: 55,
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.only(
-                          top: 7.0,
-                          left: 18.0,
-                        ),
-                        child: SizedBox(
-                          width: 60.0,
-                          child: Center(
-                            child: Text(
-                              "Plates",
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      RoundedImage(
-                        imageUrl: "assets/images/tissues.png",
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  const TissuePage(type: "Tissues"),
-                            ),
-                          );
-                        },
-                        size: 55,
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.only(
-                          top: 7.0,
-                          left: 18.0,
-                        ),
-                        child: SizedBox(
-                          width: 60.0,
-                          child: Center(
-                            child: Text(
-                              "Tissues",
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      RoundedImage(
-                        imageUrl: "assets/images/containers.png",
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  const ContainerPage(type: "Containers"),
-                            ),
-                          );
-                        },
-                        size: 55,
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.only(
-                          top: 7.0,
-                          left: 18.0,
-                        ),
-                        child: SizedBox(
-                          width: 60.0,
-                          child: Center(
-                            child: Text(
-                              "Containers",
-                              style: TextStyle(
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      RoundedImage(
-                        imageUrl: "assets/images/toothpicks.png",
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  const PlatesPage(type: "Toothpicks"),
-                            ),
-                          );
-                        },
-                        size: 55,
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.only(
-                          top: 7.0,
-                          left: 18.0,
-                        ),
-                        child: SizedBox(
-                          width: 60.0,
-                          child: Center(
-                            child: Text(
-                              "Toothpicks",
-                              style: TextStyle(
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 10.0),
-                    child: Column(
-                      children: [
-                        RoundedImage(
-                          imageUrl: "assets/images/cuttlery.png",
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const PlatesPage(type: "Cuttlery"),
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // corousel image slider
+                Padding(
+                  padding: const EdgeInsets.only(top: 30.0),
+                  child: CarouselSlider(
+                    options: CarouselOptions(
+                      height: 200.0,
+                      enlargeCenterPage: true,
+                      enlargeFactor: 0.3,
+                      enlargeStrategy: CenterPageEnlargeStrategy.scale,
+                      autoPlay: true,
+                      autoPlayInterval: const Duration(seconds: 2),
+                    ),
+                    items: imageUrls.map(
+                      (imageUrl) {
+                        return Builder(
+                          builder: (BuildContext context) {
+                            return SizedBox(
+                              width: MediaQuery.of(context).size.width,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(15.0),
+                                child: Image.network(
+                                  imageUrl,
+                                  width: 300.0,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             );
                           },
-                          size: 55,
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.only(
-                            top: 7.0,
-                            left: 18.0,
-                          ),
-                          child: SizedBox(
-                            width: 60.0,
-                            child: Center(
-                              child: Text(
-                                "Cuttlery",
-                                style: TextStyle(
-                                  overflow: TextOverflow.ellipsis,
+                        );
+                      },
+                    ).toList(),
+                  ),
+                ),
+                // categories
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 30.0,
+                    left: 25.0,
+                  ),
+                  child: Text(
+                    "Categories",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18.0,
+                      fontFamily: GoogleFonts.tiltNeon().fontFamily,
+                    ),
+                  ),
+                ),
+                // items
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      Column(
+                        children: [
+                          RoundedImage(
+                            imageUrl: "assets/images/plate.png",
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const PlatesPage(type: "Plates"),
                                 ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
+                              );
+                            },
+                            size: 55,
+                          ),
+                          const Padding(
+                            padding: EdgeInsets.only(
+                              top: 7.0,
+                              left: 18.0,
+                            ),
+                            child: SizedBox(
+                              width: 60.0,
+                              child: Center(
+                                child: Text(
+                                  "Plates",
+                                ),
                               ),
                             ),
                           ),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          RoundedImage(
+                            imageUrl: "assets/images/tissues.png",
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const TissuePage(type: "Tissues"),
+                                ),
+                              );
+                            },
+                            size: 55,
+                          ),
+                          const Padding(
+                            padding: EdgeInsets.only(
+                              top: 7.0,
+                              left: 18.0,
+                            ),
+                            child: SizedBox(
+                              width: 60.0,
+                              child: Center(
+                                child: Text(
+                                  "Tissues",
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          RoundedImage(
+                            imageUrl: "assets/images/containers.png",
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const ContainerPage(type: "Containers"),
+                                ),
+                              );
+                            },
+                            size: 55,
+                          ),
+                          const Padding(
+                            padding: EdgeInsets.only(
+                              top: 7.0,
+                              left: 18.0,
+                            ),
+                            child: SizedBox(
+                              width: 60.0,
+                              child: Center(
+                                child: Text(
+                                  "Containers",
+                                  style: TextStyle(
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          RoundedImage(
+                            imageUrl: "assets/images/toothpicks.png",
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const PlatesPage(type: "Toothpicks"),
+                                ),
+                              );
+                            },
+                            size: 55,
+                          ),
+                          const Padding(
+                            padding: EdgeInsets.only(
+                              top: 7.0,
+                              left: 18.0,
+                            ),
+                            child: SizedBox(
+                              width: 60.0,
+                              child: Center(
+                                child: Text(
+                                  "Toothpicks",
+                                  style: TextStyle(
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 10.0),
+                        child: Column(
+                          children: [
+                            RoundedImage(
+                              imageUrl: "assets/images/cuttlery.png",
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const PlatesPage(type: "Cuttlery"),
+                                  ),
+                                );
+                              },
+                              size: 55,
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.only(
+                                top: 7.0,
+                                left: 18.0,
+                              ),
+                              child: SizedBox(
+                                width: 60.0,
+                                child: Center(
+                                  child: Text(
+                                    "Cuttlery",
+                                    style: TextStyle(
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
+                    ],
+                  ),
+                ),
+                // title 2
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 25.0,
+                    left: 25.0,
+                  ),
+                  child: Text(
+                    "Featured Products for You",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18.0,
+                      fontFamily: GoogleFonts.tiltNeon().fontFamily,
                     ),
                   ),
-                ],
-              ),
-            ),
-            // title 2
-            const Padding(
-              padding: EdgeInsets.only(
-                top: 25.0,
-                left: 25.0,
-              ),
-              child: Text(
-                "Featured products for you",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 17.0,
                 ),
-              ),
-            ),
 
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                CustomCard(
-                  assetUrl: "assets/images/raw1.jpg",
-                  title: "Product 1: plate cardboard",
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    CustomCard(
+                      assetUrl: "assets/images/raw1.jpg",
+                      title: "Product 1: plate cardboard",
+                    ),
+                    CustomCard(
+                      assetUrl: "assets/images/raw2.jpg",
+                      title: "Product 2: plate cardboard",
+                    ),
+                  ],
                 ),
-                CustomCard(
-                  assetUrl: "assets/images/raw2.jpg",
-                  title: "Product 2: plate cardboard",
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    CustomCard(
+                      assetUrl: "assets/images/tissue4.jpg",
+                      title: "Product 3: Tissue General",
+                    ),
+                    CustomCard(
+                      assetUrl: "assets/images/tissue3.jpg",
+                      title: "Product 4: Tissue General",
+                    ),
+                  ],
+                ),
+
+                // show more : featured
+                RoundedBorderButton(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            const ShowMorePage(type: "Featured"),
+                      ),
+                    );
+                  },
+                  text: "Show More",
+                ),
+
+                // categories
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 30.0,
+                    left: 20.0,
+                  ),
+                  child: Text(
+                    "Refined Selections",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18.0,
+                      fontFamily: GoogleFonts.tiltNeon().fontFamily,
+                    ),
+                  ),
+                ),
+
+                // chips
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 10.0,
+                    left: 2.0,
+                  ),
+                  child: ChipsChoice<String>.single(
+                    value: selectedItems.isNotEmpty ? selectedItems[0] : null,
+                    onChanged: (val) {
+                      setState(() {
+                        selectedItems = [val];
+                      });
+                    },
+                    choiceItems: C2Choice.listFrom<String, String>(
+                      source: options,
+                      value: (i, v) => v,
+                      label: (i, v) => v,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 20.0,
+                  ),
+                  child: Text(
+                    "Showing some refined ${selectedItems.isNotEmpty ? selectedItems[0] : "None"} products",
+                    style: const TextStyle(
+                      fontSize: 14.0,
+                    ),
+                  ),
+                ),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    CustomCard(
+                      assetUrl: "assets/images/raw3.jpg",
+                      title:
+                          "${selectedItems.isNotEmpty ? selectedItems[0] : "None"} 1: Product",
+                    ),
+                    CustomCard(
+                      assetUrl: "assets/images/raw4.jpg",
+                      title:
+                          "${selectedItems.isNotEmpty ? selectedItems[0] : "None"} 2: Product",
+                    ),
+                  ],
+                ),
+
+                // categories
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 30.0,
+                    left: 20.0,
+                  ),
+                  child: Text(
+                    "Our Innovations",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18.0,
+                      fontFamily: GoogleFonts.tiltNeon().fontFamily,
+                    ),
+                  ),
+                ),
+
+                const Padding(
+                  padding: EdgeInsets.only(
+                    left: 20.0,
+                    top: 15.0,
+                    right: 10.0,
+                  ),
+                  child: Text(
+                    "Showing some of our innovated products handcrafted for your selection",
+                    style: TextStyle(
+                      fontSize: 14.0,
+                    ),
+                  ),
+                ),
+
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    CustomCard(
+                      assetUrl: "assets/images/cont2.jpg",
+                      title: "Handcrafted 1: Product",
+                    ),
+                    CustomCard(
+                      assetUrl: "assets/images/cont3.jpg",
+                      title: "Handcrafted 2: Product",
+                    ),
+                  ],
+                ),
+
+                // space bottom
+                const SizedBox(
+                  height: 130.0,
                 ),
               ],
             ),
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                CustomCard(
-                  assetUrl: "assets/images/tissue4.jpg",
-                  title: "Product 3: Tissue General",
-                ),
-                CustomCard(
-                  assetUrl: "assets/images/tissue3.jpg",
-                  title: "Product 4: Tissue General",
-                ),
-              ],
-            ),
-
-            // show more : featured
-            RoundedBorderButton(
-              onTap: () {},
-              text: "Show More",
-            ),
-
-            // categories
-            const Padding(
-              padding: EdgeInsets.only(
-                top: 30.0,
-                left: 20.0,
-              ),
-              child: Text(
-                "Refined Selections",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 17.0,
-                ),
+          ),
+          Positioned(
+            bottom: 100.0,
+            right: 20.0,
+            child: FloatingActionButton(
+              onPressed: () {
+                _launchUrl();
+              },
+              backgroundColor: Colors.green.shade100,
+              child: Image.asset(
+                "assets/images/what.png",
+                width: 30.0,
               ),
             ),
-
-            // chips
-            Padding(
-              padding: const EdgeInsets.only(
-                top: 10.0,
-                left: 2.0,
-              ),
-              child: ChipsChoice<String>.single(
-                value: selectedItems.isNotEmpty ? selectedItems[0] : null,
-                onChanged: (val) {
-                  setState(() {
-                    selectedItems = [val];
-                  });
-                },
-                choiceItems: C2Choice.listFrom<String, String>(
-                  source: options,
-                  value: (i, v) => v,
-                  label: (i, v) => v,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(
-                left: 20.0,
-              ),
-              child: Text(
-                "Showing some refined ${selectedItems.isNotEmpty ? selectedItems[0] : "None"} products",
-                style: const TextStyle(
-                  fontSize: 14.0,
-                ),
-              ),
-            ),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                CustomCard(
-                  assetUrl: "assets/images/raw3.jpg",
-                  title:
-                      "${selectedItems.isNotEmpty ? selectedItems[0] : "None"} 1: Product",
-                ),
-                CustomCard(
-                  assetUrl: "assets/images/raw4.jpg",
-                  title:
-                      "${selectedItems.isNotEmpty ? selectedItems[0] : "None"} 2: Product",
-                ),
-              ],
-            ),
-
-            // categories
-            const Padding(
-              padding: EdgeInsets.only(
-                top: 30.0,
-                left: 20.0,
-              ),
-              child: Text(
-                "Our innovations",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 17.0,
-                ),
-              ),
-            ),
-
-            const Padding(
-              padding: EdgeInsets.only(
-                left: 20.0,
-                top: 15.0,
-                right: 10.0,
-              ),
-              child: Text(
-                "Showing some of our innovated products handcrafted for your selection",
-                style: TextStyle(
-                  fontSize: 14.0,
-                ),
-              ),
-            ),
-
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                CustomCard(
-                  assetUrl: "assets/images/cont2.jpg",
-                  title: "Handcrafted 1: Product",
-                ),
-                CustomCard(
-                  assetUrl: "assets/images/cont3.jpg",
-                  title: "Handcrafted 2: Product",
-                ),
-              ],
-            ),
-
-            // space bottom
-            const SizedBox(
-              height: 130.0,
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
+  }
+
+  Future<void> _launchUrl() async {
+    if (!await launchUrl(Uri.parse("https://wa.me/919168202971"))) {
+      throw Exception('Could not launch');
+    }
   }
 }
 

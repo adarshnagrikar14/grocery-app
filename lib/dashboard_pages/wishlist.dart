@@ -21,11 +21,12 @@ class _WishlistPageState extends State<WishlistPage> {
 
   Future<List<WishlistItem>> fetchWishlist() async {
     final prefs = await SharedPreferences.getInstance();
-    final wishlist = prefs.getStringList('Wishlist') ?? [];
+    final wishlist = prefs.getStringList('Wishlist2') ?? [];
 
     List<WishlistItem> wishlistItems = wishlist.map((item) {
       final parts = item.split(';');
-      return WishlistItem(imageUrl: parts[0], title: parts[1]);
+      return WishlistItem(
+          imageUrl: parts[0], title: parts[1], sizeOption: parts[2]);
     }).toList();
 
     return wishlistItems;
@@ -64,6 +65,7 @@ class _WishlistPageState extends State<WishlistPage> {
                     return CustomCard(
                       imageUrl: wishlistItems[index].imageUrl,
                       title: wishlistItems[index].title,
+                      size: wishlistItems[index].sizeOption,
                       onTap: () {
                         deleteItem(index);
                       },
@@ -92,7 +94,7 @@ class _WishlistPageState extends State<WishlistPage> {
         return '${item.imageUrl};${item.title}';
       }).toList();
 
-      await prefs.setStringList('Wishlist', wishlistStrings);
+      await prefs.setStringList('Wishlist2', wishlistStrings);
 
       setState(() {
         wishlistItems = wishlistItems;
@@ -106,6 +108,7 @@ class _WishlistPageState extends State<WishlistPage> {
 class CustomCard extends StatefulWidget {
   final String imageUrl;
   final String title;
+  final String size;
   final VoidCallback onTap;
 
   const CustomCard({
@@ -113,6 +116,7 @@ class CustomCard extends StatefulWidget {
     required this.imageUrl,
     required this.title,
     required this.onTap,
+    required this.size,
   });
 
   @override
@@ -155,7 +159,7 @@ class _CustomCardState extends State<CustomCard> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      widget.title,
+                      "${widget.title} (${widget.size})",
                       style: const TextStyle(
                         fontSize: 17.0,
                         fontWeight: FontWeight.bold,
@@ -228,9 +232,11 @@ class _CustomCardState extends State<CustomCard> {
 class WishlistItem {
   final String imageUrl;
   final String title;
+  final String sizeOption;
 
   WishlistItem({
     required this.imageUrl,
     required this.title,
+    required this.sizeOption,
   });
 }
