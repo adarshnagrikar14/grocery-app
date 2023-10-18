@@ -1,4 +1,4 @@
-// ignore_for_file: file_names, no_logic_in_create_state, invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member, deprecated_member_use
+// ignore_for_file: file_names, no_logic_in_create_state, invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member, deprecated_member_use, library_private_types_in_public_api
 
 import 'package:circular_bottom_navigation/circular_bottom_navigation.dart';
 import 'package:circular_bottom_navigation/tab_item.dart';
@@ -31,11 +31,11 @@ class _MainScreenState extends State<MainScreen> {
     _selectedIndex = 0;
     _navigationController = CircularBottomNavigationController(_selectedIndex);
 
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle.light.copyWith(
-        systemNavigationBarColor: Colors.green.shade100,
-      ),
-    );
+    // SystemChrome.setSystemUIOverlayStyle(
+    //   SystemUiOverlayStyle.light.copyWith(
+    //     systemNavigationBarColor: Colors.green.shade100,
+    //   ),
+    // );
   }
 
   @override
@@ -100,14 +100,8 @@ class _MainScreenState extends State<MainScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          toolbarHeight: 60.0,
-          title: const Text(
-            "Venus (India) Inc.",
-            style: TextStyle(
-              fontSize: 22.0,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          toolbarHeight: 70.0,
+          title: const AnimationText(title: "Venus (India) Inc."),
           actions: <Widget>[
             Padding(
               padding: const EdgeInsets.symmetric(
@@ -172,15 +166,15 @@ class _MainScreenState extends State<MainScreen> {
           backgroundBoxShadow: const <BoxShadow>[
             BoxShadow(color: Colors.black12, blurRadius: 15.0),
           ],
-          barBackgroundGradient: LinearGradient(
-            colors: [
-              Colors.green.shade50,
-              Colors.green.shade50,
-              Colors.green.shade100,
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
+          // barBackgroundGradient: LinearGradient(
+          //   colors: [
+          //     Colors.green.shade50,
+          //     Colors.green.shade50,
+          //     Colors.green.shade100,
+          //   ],
+          //   begin: Alignment.topCenter,
+          //   end: Alignment.bottomCenter,
+          // ),
           selectedIconColor: Colors.black87,
           selectedPos: _selectedIndex,
           circleSize: 65.0,
@@ -199,6 +193,57 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void dispose() {
     _navigationController.dispose();
+    super.dispose();
+  }
+}
+
+class AnimationText extends StatefulWidget {
+  final String title;
+  const AnimationText({super.key, required this.title});
+
+  @override
+  _AnimationTextState createState() => _AnimationTextState();
+}
+
+class _AnimationTextState extends State<AnimationText>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<Offset> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 2500),
+    );
+    _animation = Tween<Offset>(
+      begin: const Offset(-1.0, 0.0),
+      end: const Offset(0.0, 0.0),
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.bounceInOut,
+    ));
+    _animationController.forward();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SlideTransition(
+      position: _animation,
+      child: Text(
+        widget.title,
+        style: const TextStyle(
+          fontSize: 22.0,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
     super.dispose();
   }
 }

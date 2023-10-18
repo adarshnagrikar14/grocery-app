@@ -30,10 +30,11 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         textTheme: GoogleFonts.robotoSlabTextTheme(),
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.greenAccent),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.white,
+        ),
         useMaterial3: true,
       ),
-      // home: const WalkThrough(),
       home: const SplashScreen(),
     );
   }

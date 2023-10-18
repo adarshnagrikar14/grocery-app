@@ -21,7 +21,7 @@ class _WishlistPageState extends State<WishlistPage> {
 
   Future<List<WishlistItem>> fetchWishlist() async {
     final prefs = await SharedPreferences.getInstance();
-    final wishlist = prefs.getStringList('Wishlist2') ?? [];
+    final wishlist = prefs.getStringList('Wishlist3') ?? [];
 
     List<WishlistItem> wishlistItems = wishlist.map((item) {
       final parts = item.split(';');
@@ -91,10 +91,10 @@ class _WishlistPageState extends State<WishlistPage> {
       wishlistItems.removeAt(index);
 
       final wishlistStrings = wishlistItems.map((item) {
-        return '${item.imageUrl};${item.title}';
+        return '${item.imageUrl};${item.title};${item.sizeOption}';
       }).toList();
 
-      await prefs.setStringList('Wishlist2', wishlistStrings);
+      await prefs.setStringList('Wishlist3', wishlistStrings);
 
       setState(() {
         wishlistItems = wishlistItems;

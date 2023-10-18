@@ -333,9 +333,9 @@ class _DisplayItemPageState extends State<DisplayItemPage> {
     });
 
     final prefs = await SharedPreferences.getInstance();
-    List<String> wishlist = prefs.getStringList('Wishlist2') ?? [];
+    List<String> wishlist = prefs.getStringList('Wishlist3') ?? [];
     wishlist.add('$imageUrl;$title;$string');
-    await prefs.setStringList('Wishlist2', wishlist);
+    await prefs.setStringList('Wishlist3', wishlist);
 
     // dismiss indicartor
     Timer(
