@@ -31,6 +31,7 @@ class CustomCard3 extends StatelessWidget {
         margin: const EdgeInsets.only(
           left: 10.0,
           right: 10.0,
+          bottom: 12.0,
           top: 20.0,
         ),
         child: Padding(

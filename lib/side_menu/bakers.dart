@@ -1,30 +1,20 @@
 // ignore_for_file: library_private_types_in_public_api
 
-import 'dart:convert';
 import 'package:chips_choice/chips_choice.dart';
+import 'package:demoapp/cust_card_linear.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:http/http.dart' as http;
-import 'package:lottie/lottie.dart';
 
-import 'cust_card_linear.dart';
-import 'dashboard_pages/search.dart';
+import '../dashboard_pages/search.dart';
 
-class ShowProductAll extends StatefulWidget {
-  const ShowProductAll({Key? key}) : super(key: key);
+class BakersPage extends StatefulWidget {
+  const BakersPage({super.key});
 
   @override
-  _ShowProductAllState createState() => _ShowProductAllState();
+  State<BakersPage> createState() => _BakersPageState();
 }
 
-class _ShowProductAllState extends State<ShowProductAll> {
-  List<Map<String, dynamic>> products = [];
-
-  late bool allowedToShow;
-
-  late String crockeryType;
-
+class _BakersPageState extends State<BakersPage> {
   // selected filters
   List<String> selectedCost = [];
   List<String> selectedSize = [];
@@ -39,47 +29,30 @@ class _ShowProductAllState extends State<ShowProductAll> {
   ];
 
   List<String> optionCost = [
+    "All",
     "Affordable",
     "Reasonable",
     "Premium",
   ];
 
+  List<String> imageUrl = [
+    "assets/images/cate1.webp",
+    "assets/images/cate2.jpg",
+    "assets/images/cate2.jpg",
+    "assets/images/cate1.webp"
+  ];
+
   @override
   void initState() {
     super.initState();
-    fetchProducts();
-    allowedToShow = false;
     selectedCost = [optionCost[0]];
-    crockeryType = "";
-  }
-
-  Future<void> fetchProducts() async {
-    final response = await http.get(
-      Uri.parse('https://assignme-work.000webhostapp.com/call.php'),
-    );
-
-    if (response.statusCode == 200) {
-      final List<dynamic> data = json.decode(response.body);
-
-      setState(() {
-        products = List<Map<String, dynamic>>.from(data);
-        allowedToShow = true;
-      });
-    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 60.0,
-        title: Text(
-          "Fetaured Products for You",
-          style: TextStyle(
-            fontSize: 22.0,
-            fontFamily: GoogleFonts.tiltNeon().fontFamily,
-          ),
-        ),
+        title: const Text("Explore Bakers Collection"),
         actions: <Widget>[
           Padding(
             padding: const EdgeInsets.symmetric(
@@ -202,6 +175,7 @@ class _ShowProductAllState extends State<ShowProductAll> {
                       onChanged: (val) {
                         setState(() {
                           selectedCost = [val];
+                          imageUrl.shuffle();
                         });
 
                         Fluttertoast.showToast(msg: "Applied $val filter");
@@ -224,7 +198,7 @@ class _ShowProductAllState extends State<ShowProductAll> {
                   Padding(
                     padding: const EdgeInsets.only(left: 16.0, right: 20.0),
                     child: Text(
-                      "Showing all ${selectedCost.isNotEmpty ? selectedCost[0] : "None"} $crockeryType collection",
+                      "Showing ${selectedCost.isNotEmpty ? selectedCost[0] : "None"} Bakers collection",
                       style: const TextStyle(
                         fontSize: 14.0,
                       ),
@@ -237,48 +211,17 @@ class _ShowProductAllState extends State<ShowProductAll> {
           Expanded(
             flex: 18,
             child: Padding(
-              padding: const EdgeInsets.only(bottom: 20.0),
-              child: Stack(children: [
-                Visibility(
-                  visible: allowedToShow,
-                  child: ListView.builder(
-                    itemCount: products.length,
-                    itemBuilder: (context, index) {
-                      final product = products[index];
-                      final assetUrl = product['ImageLink'] ?? '';
-                      final title = product['ProductName'] ?? '';
-                      final type = product['Type'] ?? '';
-
-                      return CustomCard3(
-                        assetUrl: assetUrl,
-                        title: title,
-                        type: type,
-                      );
-                    },
-                  ),
-                ),
-                Visibility(
-                  visible: !allowedToShow,
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        LottieBuilder.asset(
-                          'assets/raw/loading.json',
-                          height: 100,
-                          reverse: true,
-                          repeat: true,
-                        ),
-                        const Text(
-                          "Loading...",
-                        ),
-                      ],
-                    ),
-                  ),
-                )
-              ]),
+              padding: const EdgeInsets.only(bottom: 10.0),
+              child: ListView.builder(
+                itemCount: imageUrl.length,
+                itemBuilder: (context, index) {
+                  return CustomCard3(
+                    assetUrl: imageUrl[index],
+                    title: "Product ${index + 1}: Bakers",
+                    type: 'Bakers Items',
+                  );
+                },
+              ),
             ),
           ),
         ],
@@ -335,7 +278,7 @@ class _ShowProductAllState extends State<ShowProductAll> {
                       onChanged: (int? value) {
                         setState(() {
                           selectedSort = value!;
-                          products.shuffle();
+                          imageUrl.shuffle();
                         });
                         Navigator.pop(context);
 
@@ -358,10 +301,10 @@ class _ShowProductAllState extends State<ShowProductAll> {
       context: context,
       builder: (BuildContext context) {
         return CustomFilter(
-          imageUrls: products,
+          imageUrls: imageUrl,
           onFilterApplied: (filteredUrls) {
             setState(() {
-              products = filteredUrls;
+              imageUrl = filteredUrls;
             });
           },
         );
@@ -371,8 +314,8 @@ class _ShowProductAllState extends State<ShowProductAll> {
 }
 
 class CustomFilter extends StatefulWidget {
-  final List<Map<String, dynamic>> imageUrls;
-  final Function(List<Map<String, dynamic>>) onFilterApplied;
+  final List<String> imageUrls;
+  final Function(List<String>) onFilterApplied;
 
   const CustomFilter({
     required this.imageUrls,
@@ -619,7 +562,7 @@ class _CustomFilterState extends State<CustomFilter> {
   }
 
   void applyFilter() {
-    List<Map<String, dynamic>> filteredImageUrls = widget.imageUrls;
+    List<String> filteredImageUrls = widget.imageUrls;
     filteredImageUrls.shuffle();
     widget.onFilterApplied(filteredImageUrls);
 

@@ -1,12 +1,16 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:chips_choice/chips_choice.dart';
+import 'package:demoapp/brands_cat/dinearth.dart';
+import 'package:demoapp/cust_card_row.dart';
 import 'package:demoapp/dashboard_pages/search.dart';
 import 'package:demoapp/display_items.dart';
+import 'package:demoapp/more_brands.dart';
 import 'package:demoapp/show_more_af.dart';
 import 'package:demoapp/types/plates.dart';
 import 'package:demoapp/types/container.dart';
 import 'package:demoapp/types/tissues.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -33,7 +37,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   List<String> options = [
     "Affordable",
     "Reasonable",
-    "Premium",
+    "Premium\n",
   ];
 
   List<String> imageUrls = [
@@ -46,6 +50,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Stack(
         children: [
           SingleChildScrollView(
@@ -103,7 +108,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 // corousel image slider
                 Padding(
                   padding: const EdgeInsets.only(
-                    top: 10.0,
                     left: 18.0,
                   ),
                   child: Text(
@@ -121,7 +125,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     children: [
                       CarouselSlider(
                         options: CarouselOptions(
-                          height: 220.0,
+                          height: 200.0,
                           aspectRatio: 16 / 9,
                           enlargeCenterPage: true,
                           enlargeFactor: 1,
@@ -142,7 +146,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               builder: (BuildContext context) {
                                 return SizedBox(
                                   width:
-                                      MediaQuery.of(context).size.width * 0.9,
+                                      MediaQuery.of(context).size.width * 0.92,
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(15.0),
                                     child: Image.network(
@@ -193,7 +197,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     borderRadius: BorderRadius.circular(
                       12.0,
                     ),
-                    color: Colors.green.shade50,
+                    color: Colors.green.shade100,
                   ),
                   margin: const EdgeInsets.only(
                     left: 18.0,
@@ -406,6 +410,148 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ],
                   ),
                 ),
+
+                // brand categories
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  // color: Colors.grey,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(
+                      12.0,
+                    ),
+                    color: Colors.green.shade100,
+                  ),
+                  margin: const EdgeInsets.only(
+                    left: 18.0,
+                    right: 18.0,
+                    top: 22.0,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          top: 8.0,
+                          left: 10.0,
+                        ),
+                        child: Text(
+                          "Brand Categories",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18.0,
+                            fontFamily: GoogleFonts.tiltNeon().fontFamily,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 0.0, bottom: 10.0),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                margin: const EdgeInsets.only(
+                                  top: 20.0,
+                                  bottom: 15.0,
+                                  left: 10.0,
+                                ),
+                                padding: const EdgeInsets.all(8.0),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(
+                                    10.0,
+                                  ),
+                                  color: Colors.black26,
+                                ),
+                                width: 110.0,
+                                height: 55.0,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const DineEarthPage(),
+                                      ),
+                                    );
+                                  },
+                                  child: Image.asset(
+                                    'assets/images/dinearth.webp',
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: Container(
+                                margin: const EdgeInsets.only(
+                                  top: 20.0,
+                                  bottom: 15.0,
+                                  left: 15.0,
+                                ),
+                                padding: const EdgeInsets.all(8.0),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(
+                                    10.0,
+                                  ),
+                                  color: Colors.black26,
+                                ),
+                                width: 110.0,
+                                height: 55.0,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Fluttertoast.showToast(
+                                      msg: "Under development",
+                                    );
+                                  },
+                                  child: Image.asset(
+                                    'assets/images/pmahal.png',
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: Container(
+                                margin: const EdgeInsets.only(
+                                  top: 20.0,
+                                  bottom: 15.0,
+                                  left: 15.0,
+                                  right: 15.0,
+                                ),
+                                padding: const EdgeInsets.all(8.0),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(
+                                    10.0,
+                                  ),
+                                  color: Colors.white30,
+                                ),
+                                width: 110.0,
+                                height: 55.0,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const MoreBrandsPage(),
+                                      ),
+                                    );
+                                  },
+                                  child: const Center(
+                                    child: Text(
+                                      "See All",
+                                      style: TextStyle(
+                                        fontSize: 17.0,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 // title 2
                 const Space(
                   top: 22,
@@ -426,31 +572,44 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                 ),
 
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    CustomCard(
-                      assetUrl: "assets/images/raw1.jpg",
-                      title: "Product 1: plate cardboard",
+                Container(
+                  margin: const EdgeInsets.only(
+                    left: 10,
+                    right: 10,
+                    top: 10,
+                  ),
+                  padding: const EdgeInsets.only(
+                    bottom: 5.0,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(
+                      12.0,
                     ),
-                    CustomCard(
-                      assetUrl: "assets/images/raw2.jpg",
-                      title: "Product 2: plate cardboard",
+                    // color: Colors.green.shade100,
+                  ),
+                  child: const SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        CustomCardRow(
+                          assetUrl: "assets/images/raw1.jpg",
+                          title: "Product 1: plate cardboard",
+                        ),
+                        CustomCardRow(
+                          assetUrl: "assets/images/raw2.jpg",
+                          title: "Product 2: plate cardboard",
+                        ),
+                        CustomCardRow(
+                          assetUrl: "assets/images/tissue4.jpg",
+                          title: "Product 3: Tissue General",
+                        ),
+                        CustomCardRow(
+                          assetUrl: "assets/images/tissue3.jpg",
+                          title: "Product 4: Tissue General",
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    CustomCard(
-                      assetUrl: "assets/images/tissue4.jpg",
-                      title: "Product 3: Tissue General",
-                    ),
-                    CustomCard(
-                      assetUrl: "assets/images/tissue3.jpg",
-                      title: "Product 4: Tissue General",
-                    ),
-                  ],
+                  ),
                 ),
 
                 // show more : featured
@@ -467,9 +626,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
 
                 // categories
+                const Space(
+                  top: 22,
+                  bottom: 0,
+                ),
                 Padding(
                   padding: const EdgeInsets.only(
-                    top: 30.0,
+                    top: 20.0,
                     left: 20.0,
                   ),
                   child: Text(
@@ -487,7 +650,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   padding: const EdgeInsets.only(
                     top: 2.0,
                     left: 2.0,
-                    bottom: 8.0,
                   ),
                   child: Container(
                     width: MediaQuery.of(context).size.width,
@@ -518,94 +680,214 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 Padding(
                   padding: const EdgeInsets.only(
                     left: 20.0,
+                    bottom: 8.0,
                   ),
                   child: Text(
                     "Showing some refined ${selectedItems.isNotEmpty ? selectedItems[0] : "None"} products",
                     style: const TextStyle(
                       fontSize: 14.0,
+                      color: Colors.black,
                     ),
                   ),
                 ),
 
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    CustomCard(
-                      assetUrl: "assets/images/raw3.jpg",
-                      title:
-                          "${selectedItems.isNotEmpty ? selectedItems[0] : "None"} 1: Product",
+                Container(
+                  margin: const EdgeInsets.only(
+                    left: 10,
+                    right: 10,
+                    top: 10,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(
+                      12.0,
                     ),
-                    CustomCard(
-                      assetUrl: "assets/images/raw4.jpg",
-                      title:
-                          "${selectedItems.isNotEmpty ? selectedItems[0] : "None"} 2: Product",
+                    // color: Colors.amber.shade300,
+                  ),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        CustomCardRow(
+                          assetUrl: "assets/images/cont1.jpg",
+                          title:
+                              "${selectedItems.isNotEmpty ? selectedItems[0] : "None"} 1: Product",
+                        ),
+                        CustomCardRow(
+                          assetUrl: "assets/images/raw4.jpg",
+                          title:
+                              "${selectedItems.isNotEmpty ? selectedItems[0] : "None"} 2: Product",
+                        ),
+                        CustomCardRow(
+                          assetUrl: "assets/images/raw3.jpg",
+                          title:
+                              "${selectedItems.isNotEmpty ? selectedItems[0] : "None"} 3: Product",
+                        ),
+                        CustomCardRow(
+                          assetUrl: "assets/images/tissue2.jpg",
+                          title:
+                              "${selectedItems.isNotEmpty ? selectedItems[0] : "None"} 4: Product",
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
 
                 // categories
+                const Space(
+                  top: 22,
+                  bottom: 0,
+                ),
                 Padding(
                   padding: const EdgeInsets.only(
-                    top: 30.0,
+                    top: 15.0,
                     left: 20.0,
                   ),
                   child: Text(
                     "Our Innovations",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 18.0,
+                      fontSize: 20.0,
                       fontFamily: GoogleFonts.tiltNeon().fontFamily,
                     ),
                   ),
                 ),
 
-                const Padding(
-                  padding: EdgeInsets.only(
-                    left: 20.0,
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 12.0,
                     top: 15.0,
-                    right: 10.0,
+                    right: 12.0,
                   ),
-                  child: Text(
-                    "Showing some of our innovated products handcrafted for your selection",
-                    style: TextStyle(
-                      fontSize: 14.0,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(
+                        8.0,
+                      ),
+                      border: Border.all(
+                        color: Colors.black38,
+                      ),
+                    ),
+                    child: const Padding(
+                      padding: EdgeInsets.all(
+                        8.0,
+                      ),
+                      child: Text(
+                        "Showing some of our innovated products handcrafted for your selection",
+                        style: TextStyle(
+                          fontSize: 14.0,
+                        ),
+                      ),
                     ),
                   ),
                 ),
 
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    CustomCard(
-                      assetUrl: "assets/images/cont2.jpg",
-                      title: "Handcrafted 1: Product",
+                Container(
+                  margin: const EdgeInsets.only(
+                    left: 10,
+                    right: 10,
+                    top: 10,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(
+                      12.0,
                     ),
-                    CustomCard(
-                      assetUrl: "assets/images/cont3.jpg",
-                      title: "Handcrafted 2: Product",
+                    // color: Colors.amber.shade300,
+                  ),
+                  child: const SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        CustomCardRow(
+                          assetUrl: "assets/images/cont4.jpg",
+                          title: "Innovation 1: Product",
+                        ),
+                        CustomCardRow(
+                          assetUrl: "assets/images/cont2.jpg",
+                          title: "Innovation 2: Product",
+                        ),
+                        CustomCardRow(
+                          assetUrl: "assets/images/tissue1.jpg",
+                          title: "Innovation 3: Product",
+                        ),
+                        CustomCardRow(
+                          assetUrl: "assets/images/raw2.jpg",
+                          title: "Innovation 4: Product",
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
 
-                // space bottom
+                Container(
+                  margin: const EdgeInsets.only(
+                    top: 30,
+                  ),
+                  width: MediaQuery.of(context).size.width,
+                  color: Colors.grey.shade200,
+                  height: 380.0,
+                  child: const Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 30.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Live\nit up!",
+                            style: TextStyle(
+                              fontSize: 80.0,
+                              fontWeight: FontWeight.w900,
+                              color: Colors.grey,
+                              height: 1.2,
+                            ),
+                            textAlign: TextAlign.start,
+                          ),
+                          Text(
+                            "\nCrafted especially for your Convenience",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              color: Colors.grey,
+                              height: 1.2,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
                 const SizedBox(
-                  height: 130.0,
-                ),
+                  height: 70.0,
+                )
               ],
             ),
           ),
           Positioned(
             bottom: 100.0,
             right: 20.0,
-            child: FloatingActionButton(
-              onPressed: () {
-                _launchUrl();
-              },
-              backgroundColor: Colors.green.shade100,
-              child: Image.asset(
-                "assets/images/what.png",
-                width: 30.0,
-              ),
+            child: Column(
+              children: [
+                FloatingActionButton(
+                  onPressed: () {
+                    _launchUrl();
+                  },
+                  backgroundColor: Colors.green.shade50,
+                  child: Image.asset(
+                    "assets/images/what.png",
+                    width: 30.0,
+                  ),
+                ),
+                const SizedBox(
+                  height: 20.0,
+                ),
+                FloatingActionButton(
+                  onPressed: () {
+                    _launchCall();
+                  },
+                  backgroundColor: Colors.green.shade50,
+                  child: const Icon(Icons.call),
+                ),
+              ],
             ),
           ),
         ],
@@ -615,6 +897,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Future<void> _launchUrl() async {
     if (!await launchUrl(Uri.parse("https://wa.me/919168202971"))) {
+      throw Exception('Could not launch');
+    }
+  }
+
+  Future<void> _launchCall() async {
+    if (!await launchUrl(Uri.parse("tel:9168202971"))) {
       throw Exception('Could not launch');
     }
   }
@@ -691,12 +979,12 @@ class CustomCard extends StatelessWidget {
           elevation: 0.7,
           margin: const EdgeInsets.only(
             left: 10.0,
-            right: 10.0,
             top: 20.0,
           ),
           child: Padding(
             padding: const EdgeInsets.all(10.0),
             child: Column(
+              mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ClipRRect(
@@ -714,6 +1002,7 @@ class CustomCard extends StatelessWidget {
                     style: const TextStyle(
                       fontSize: 14.0,
                       fontWeight: FontWeight.bold,
+                      color: Colors.black,
                     ),
                   ),
                 ),

@@ -7,6 +7,11 @@ import 'package:demoapp/dashboard_pages/notification.dart';
 import 'package:demoapp/dashboard_pages/search.dart';
 import 'package:demoapp/dashboard_pages/settings.dart';
 import 'package:demoapp/dashboard_pages/wishlist.dart';
+import 'package:demoapp/side_menu/bakers.dart';
+import 'package:demoapp/side_menu/bars.dart';
+import 'package:demoapp/side_menu/caterers.dart';
+import 'package:demoapp/side_menu/hotels.dart';
+import 'package:demoapp/side_menu/restaurant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -27,15 +32,14 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
-
     _selectedIndex = 0;
     _navigationController = CircularBottomNavigationController(_selectedIndex);
 
-    // SystemChrome.setSystemUIOverlayStyle(
-    //   SystemUiOverlayStyle.light.copyWith(
-    //     systemNavigationBarColor: Colors.green.shade100,
-    //   ),
-    // );
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle.light.copyWith(
+        systemNavigationBarColor: Colors.white,
+      ),
+    );
   }
 
   @override
@@ -43,35 +47,39 @@ class _MainScreenState extends State<MainScreen> {
     List<TabItem> tabItems = List.of(
       [
         TabItem(
-          Icons.home,
+          Icons.home_filled,
           "Home",
           Colors.green.shade100,
-          labelStyle: const TextStyle(
+          labelStyle: TextStyle(
             fontWeight: FontWeight.bold,
+            color: Colors.green.shade800,
           ),
         ),
         TabItem(
           Icons.favorite_rounded,
           "Wishlist",
           Colors.green.shade100,
-          labelStyle: const TextStyle(
+          labelStyle: TextStyle(
             fontWeight: FontWeight.bold,
+            color: Colors.green.shade800,
           ),
         ),
         TabItem(
           Icons.notifications,
           "Notifications",
           Colors.green.shade100,
-          labelStyle: const TextStyle(
+          labelStyle: TextStyle(
             fontWeight: FontWeight.bold,
+            color: Colors.green.shade800,
           ),
         ),
         TabItem(
           Icons.settings,
           "Settings",
           Colors.green.shade100,
-          labelStyle: const TextStyle(
+          labelStyle: TextStyle(
             fontWeight: FontWeight.bold,
+            color: Colors.green.shade800,
           ),
         ),
       ],
@@ -101,7 +109,30 @@ class _MainScreenState extends State<MainScreen> {
       child: Scaffold(
         appBar: AppBar(
           toolbarHeight: 70.0,
-          title: const AnimationText(title: "Venus (India) Inc."),
+          title: Center(
+            child: Row(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(
+                    12.0,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(3.0),
+                    child: Image.asset(
+                      "assets/images/logo_icon.jpg",
+                      width: 30.0,
+                      height: 30.0,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  width: 12.0,
+                ),
+                const AnimationText(title: "Venus (India) Inc."),
+              ],
+            ),
+          ),
           actions: <Widget>[
             Padding(
               padding: const EdgeInsets.symmetric(
@@ -114,6 +145,7 @@ class _MainScreenState extends State<MainScreen> {
                   message: "Search",
                   child: Icon(
                     Icons.search_rounded,
+                    color: Colors.black87,
                     size: 30.0,
                   ),
                 ),
@@ -127,32 +159,19 @@ class _MainScreenState extends State<MainScreen> {
                 },
               ),
             ),
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(
-            //     horizontal: 18.0,
-            //     vertical: 2.0,
-            //   ),
-            //   child: GestureDetector(
-            //     child: const Tooltip(
-            //       triggerMode: TooltipTriggerMode.longPress,
-            //       message: "Help",
-            //       child: Text("Help"),
-            //     ),
-            //     onTap: () {},
-            //   ),
-            // ),
           ],
           flexibleSpace: Container(
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Colors.green.shade100,
-                  Colors.green.shade50,
-                  Colors.green.shade50,
-                ],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
+              // gradient: LinearGradient(
+              //   colors: [
+              //     Colors.green.shade100,
+              //     Colors.green.shade50,
+              //     Colors.green.shade50,
+              //   ],
+              //   begin: Alignment.topCenter,
+              //   end: Alignment.bottomCenter,
+              // ),
+              color: Colors.green.shade200,
             ),
           ),
         ),
@@ -160,11 +179,176 @@ class _MainScreenState extends State<MainScreen> {
           child: widgetOptions.elementAt(_selectedIndex),
         ),
         extendBody: true,
+        drawer: Drawer(
+          backgroundColor: Colors.green.shade50,
+          child: ListView(
+            children: <Widget>[
+              const DrawerHeader(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Explore More",
+                      style: TextStyle(
+                        fontSize: 30.0,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20.0,
+                    ),
+                    Text(
+                      "The Specific Collection For Each Category",
+                      style: TextStyle(
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(
+                          12.0,
+                        ),
+                        color: Colors.white60,
+                      ),
+                      margin: const EdgeInsets.only(
+                        left: 10.0,
+                        top: 20.0,
+                        right: 10.0,
+                      ),
+                      child: ListTile(
+                        leading: const Icon(Icons.restaurant),
+                        title: const Text("Restaurants"),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const RestaurantPage(),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(
+                          12.0,
+                        ),
+                        color: Colors.white60,
+                      ),
+                      margin: const EdgeInsets.only(
+                        left: 10.0,
+                        top: 10.0,
+                        right: 10.0,
+                      ),
+                      child: ListTile(
+                        leading: const Icon(Icons.local_bar),
+                        title: const Text("Bars"),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const BarsPage(),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(
+                          12.0,
+                        ),
+                        color: Colors.white60,
+                      ),
+                      margin: const EdgeInsets.only(
+                        left: 10.0,
+                        top: 10.0,
+                        right: 10.0,
+                      ),
+                      child: ListTile(
+                        leading: const Icon(Icons.hotel),
+                        title: const Text("Hotels"),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const HotelsPage(),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(
+                          12.0,
+                        ),
+                        color: Colors.white60,
+                      ),
+                      margin: const EdgeInsets.only(
+                        left: 10.0,
+                        top: 10.0,
+                        right: 10.0,
+                      ),
+                      child: ListTile(
+                        leading: const Icon(Icons.local_pizza),
+                        title: const Text("Caterers"),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const CaterersPage(),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(
+                          12.0,
+                        ),
+                        color: Colors.white60,
+                      ),
+                      margin: const EdgeInsets.only(
+                        left: 10.0,
+                        top: 10.0,
+                        right: 10.0,
+                      ),
+                      child: ListTile(
+                        leading: const Icon(Icons.cake),
+                        title: const Text("Bakers"),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const BakersPage(),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
         bottomNavigationBar: CircularBottomNavigation(
           tabItems,
           controller: _navigationController,
           backgroundBoxShadow: const <BoxShadow>[
-            BoxShadow(color: Colors.black12, blurRadius: 15.0),
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 15.0,
+            ),
           ],
           // barBackgroundGradient: LinearGradient(
           //   colors: [
@@ -215,14 +399,14 @@ class _AnimationTextState extends State<AnimationText>
     super.initState();
     _animationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 2500),
+      duration: const Duration(milliseconds: 1500),
     );
     _animation = Tween<Offset>(
-      begin: const Offset(-1.0, 0.0),
+      begin: const Offset(0.0, -1.0),
       end: const Offset(0.0, 0.0),
     ).animate(CurvedAnimation(
       parent: _animationController,
-      curve: Curves.bounceInOut,
+      curve: Curves.ease,
     ));
     _animationController.forward();
   }
