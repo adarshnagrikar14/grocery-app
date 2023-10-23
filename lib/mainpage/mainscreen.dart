@@ -4,7 +4,6 @@ import 'package:circular_bottom_navigation/circular_bottom_navigation.dart';
 import 'package:circular_bottom_navigation/tab_item.dart';
 import 'package:demoapp/dashboard_pages/dashboard.dart';
 import 'package:demoapp/dashboard_pages/notification.dart';
-import 'package:demoapp/dashboard_pages/search.dart';
 import 'package:demoapp/dashboard_pages/settings.dart';
 import 'package:demoapp/dashboard_pages/wishlist.dart';
 import 'package:demoapp/side_menu/bakers.dart';
@@ -133,44 +132,8 @@ class _MainScreenState extends State<MainScreen> {
               ],
             ),
           ),
-          actions: <Widget>[
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 18.0,
-                vertical: 2.0,
-              ),
-              child: GestureDetector(
-                child: const Tooltip(
-                  triggerMode: TooltipTriggerMode.longPress,
-                  message: "Search",
-                  child: Icon(
-                    Icons.search_rounded,
-                    color: Colors.black87,
-                    size: 30.0,
-                  ),
-                ),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const SearchPage(),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
           flexibleSpace: Container(
             decoration: BoxDecoration(
-              // gradient: LinearGradient(
-              //   colors: [
-              //     Colors.green.shade100,
-              //     Colors.green.shade50,
-              //     Colors.green.shade50,
-              //   ],
-              //   begin: Alignment.topCenter,
-              //   end: Alignment.bottomCenter,
-              // ),
               color: Colors.green.shade200,
             ),
           ),
@@ -350,15 +313,6 @@ class _MainScreenState extends State<MainScreen> {
               blurRadius: 15.0,
             ),
           ],
-          // barBackgroundGradient: LinearGradient(
-          //   colors: [
-          //     Colors.green.shade50,
-          //     Colors.green.shade50,
-          //     Colors.green.shade100,
-          //   ],
-          //   begin: Alignment.topCenter,
-          //   end: Alignment.bottomCenter,
-          // ),
           selectedIconColor: Colors.black87,
           selectedPos: _selectedIndex,
           circleSize: 65.0,

@@ -219,6 +219,8 @@ class _CaterersPageState extends State<CaterersPage> {
                     assetUrl: imageUrl[index],
                     title: "Product ${index + 1}: Caterers",
                     type: 'Caterers Items',
+                    description:
+                        "This is a 100ml/4 oz multipurpose container with PET lid available.",
                   );
                 },
               ),

@@ -2,6 +2,7 @@
 
 import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,7 @@ import 'display_items.dart';
 
 import 'dart:ui' as ui;
 
-class CustomCardRow extends StatelessWidget {
+class CustomCardRow extends StatefulWidget {
   final String assetUrl;
   final String title;
 
@@ -23,6 +24,27 @@ class CustomCardRow extends StatelessWidget {
     required this.title,
     Key? key,
   }) : super(key: key);
+
+  @override
+  State<CustomCardRow> createState() => _CustomCardRowState();
+}
+
+class _CustomCardRowState extends State<CustomCardRow> {
+  List<String> desc = [
+    "Our Plate Cardboard is more than just a serving solution; it's your sustainable partner. Crafted from durable materials, it's designed to withstand the weight of your favorite dishes while being environmentally conscious. Choose it for a guilt-free dining experience that's both robust and eco-friendly.",
+    "Our Tissue General offers the perfect blend of resilience and responsibility. With excellent absorbency and strength, it tackles spills and messes effectively. Plus, it's an eco-friendly choice, crafted from sustainable materials to help maintain hygiene while preserving the planet.",
+    "Our Container is not just for storing your meals; it's designed to last. Its sturdy construction ensures that your food remains fresh, safe, and secure. What's more, it's an eco-conscious choice, made from sustainable materials, so you can savor your meals knowing you're making a responsible choice for the environment",
+    "Our Toothpicks are more than just handy tools; they're crafted to withstand the rigors of daily use. Their sturdiness makes them perfect for a variety of tasks. In addition to durability, they are made from sustainable materials, combining strength with eco-friendliness to meet your needs while caring for the planet.",
+  ];
+
+  final random = Random();
+  int randomIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    randomIndex = random.nextInt(desc.length);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,8 +56,8 @@ class CustomCardRow extends StatelessWidget {
             context,
             MaterialPageRoute(
               builder: (context) => DisplayItemPage(
-                imageUrl: assetUrl,
-                productName: title,
+                imageUrl: widget.assetUrl,
+                productName: widget.title,
               ),
             ),
           );
@@ -60,7 +82,7 @@ class CustomCardRow extends StatelessWidget {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(15.0),
                       child: Image.asset(
-                        assetUrl,
+                        widget.assetUrl,
                         width: MediaQuery.of(context).size.width,
                         fit: BoxFit.cover,
                         height: 160.0,
@@ -69,7 +91,7 @@ class CustomCardRow extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        title,
+                        widget.title,
                         style: const TextStyle(
                           fontSize: 14.0,
                           fontWeight: FontWeight.bold,
@@ -77,11 +99,11 @@ class CustomCardRow extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const Padding(
-                      padding: EdgeInsets.only(left: 8.0),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
                       child: Text(
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.",
-                        style: TextStyle(
+                        desc[randomIndex],
+                        style: const TextStyle(
                           fontSize: 13.0,
                           color: Colors.black87,
                           overflow: TextOverflow.ellipsis,
@@ -157,7 +179,8 @@ class CustomCardRow extends StatelessWidget {
   }
 
   void addToWishlist(String string, BuildContext context) async {
-    await saveToSharedPreferences(assetUrl, title, string, context);
+    await saveToSharedPreferences(
+        widget.assetUrl, widget.title, string, context);
 
     // Timer(
     //     const Duration(
@@ -271,11 +294,11 @@ class CustomCardRow extends StatelessWidget {
   }
 
   Future<void> _shareOnWhatsApp() async {
-    final ByteData byteData = await rootBundle.load(assetUrl);
+    final ByteData byteData = await rootBundle.load(widget.assetUrl);
     final Directory? directory1 = await getExternalStorageDirectory();
 
     final List<int> imageData = byteData.buffer.asUint8List();
-    final textImage = await textToImage(title);
+    final textImage = await textToImage(widget.title);
 
     if (directory1 != null) {
       final File file2 = File('${directory1.path}/shareable_text.jpg');

@@ -219,6 +219,8 @@ class _BarsPageState extends State<BarsPage> {
                     assetUrl: imageUrl[index],
                     title: "Product ${index + 1}: Bars",
                     type: 'Bars Items',
+                    description:
+                        "This is a 100ml/4 oz multipurpose container with PET lid available.",
                   );
                 },
               ),

@@ -1,16 +1,29 @@
-import 'package:demoapp/display_items.dart';
+// ignore_for_file: avoid_print
+
+import 'dart:async';
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:whatsapp_share/whatsapp_share.dart';
+import 'display_items.dart';
+
+import 'dart:ui' as ui;
 
 class CustomCard3 extends StatelessWidget {
   final String assetUrl;
   final String title;
   final String type;
+  final String description;
 
   const CustomCard3({
     required this.assetUrl,
     required this.title,
     required this.type,
     Key? key,
+    required this.description,
   }) : super(key: key);
 
   @override
@@ -58,11 +71,11 @@ class CustomCard3 extends StatelessWidget {
                   ),
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.only(left: 8.0),
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0),
                 child: Text(
-                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit...",
-                  style: TextStyle(
+                  description,
+                  style: const TextStyle(
                     fontSize: 15.0,
                     color: Colors.black87,
                     overflow: TextOverflow.ellipsis,
@@ -73,8 +86,9 @@ class CustomCard3 extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.only(
-                  top: 8.0,
-                  left: 5,
+                  top: 10.0,
+                  left: 4,
+                  bottom: 10.0,
                 ),
                 child: Container(
                   padding: const EdgeInsets.symmetric(
@@ -94,11 +108,110 @@ class CustomCard3 extends StatelessWidget {
                     ),
                   ),
                 ),
-              )
+              ),
+              InkWell(
+                onTap: () {
+                  _shareOnWhatsApp(
+                    assetUrl,
+                    title,
+                  );
+                },
+                child: const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text("Share it"),
+                      SizedBox(
+                        width: 20.0,
+                      ),
+                      Icon(
+                        Icons.send_rounded,
+                        size: 20.0,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ],
           ),
         ),
       ),
     );
   }
+}
+
+Future<void> _shareOnWhatsApp(String assetUrl, String title) async {
+  final ByteData byteData = await rootBundle.load(assetUrl);
+  final Directory? directory1 = await getExternalStorageDirectory();
+
+  final List<int> imageData = byteData.buffer.asUint8List();
+  final textImage = await textToImage(title);
+
+  if (directory1 != null) {
+    final File file2 = File('${directory1.path}/shareable_text.jpg');
+    final File file1 = File('${directory1.path}/shareable.jpg');
+
+    try {
+      await file1.writeAsBytes(imageData);
+      await file2.writeAsBytes(textImage);
+
+      await WhatsappShare.shareFile(
+        phone: '917620216605',
+        filePath: [
+          file1.path,
+          file2.path,
+        ],
+      );
+    } catch (e) {
+      print('Error: $e');
+    }
+  } else {
+    print("Ext storage dir. is null");
+  }
+}
+
+Future<Uint8List> textToImage(String text) async {
+  final recorder = ui.PictureRecorder();
+  final canvas = Canvas(
+    recorder,
+    Rect.fromPoints(
+      const Offset(0, 0),
+      const Offset(400, 100),
+    ),
+  );
+
+  final textPainter = TextPainter(
+    textAlign: TextAlign.center,
+    text: TextSpan(
+      text: text,
+      style: const TextStyle(
+        color: Colors.black,
+        fontSize: 20.0,
+      ),
+    ),
+    textDirection: TextDirection.ltr,
+  );
+
+  textPainter.layout(minWidth: 400, maxWidth: 400);
+
+  canvas.drawColor(
+    Colors.white,
+    BlendMode.color,
+  );
+
+  final offsetX = (400 - textPainter.width) / 2;
+  final offsetY = (100 - textPainter.height) / 2;
+  final textOffset = Offset(offsetX, offsetY);
+
+  textPainter.paint(
+    canvas,
+    textOffset,
+  );
+
+  final picture = recorder.endRecording();
+  final img = await picture.toImage(400, 100);
+  final imgByteData = await img.toByteData(format: ui.ImageByteFormat.png);
+
+  return imgByteData!.buffer.asUint8List();
 }

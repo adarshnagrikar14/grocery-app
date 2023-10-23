@@ -219,6 +219,8 @@ class _HotelsPageState extends State<HotelsPage> {
                     assetUrl: imageUrl[index],
                     title: "Product ${index + 1}: Hotels",
                     type: 'Hotels Items',
+                    description:
+                        "This is a 100ml/4 oz multipurpose container with PET lid available.",
                   );
                 },
               ),

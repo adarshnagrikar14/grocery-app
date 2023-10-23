@@ -2,6 +2,7 @@
 
 import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:chips_choice/chips_choice.dart';
 import 'dart:ui' as ui;
@@ -41,11 +42,23 @@ class _DisplayItemPageState extends State<DisplayItemPage> {
 
   bool isAddingToWishlist = false;
 
+  List<String> desc = [
+    "Our Plate Cardboard is more than just a serving solution; it's your sustainable partner. Crafted from durable materials, it's designed to withstand the weight of your favorite dishes while being environmentally conscious. Choose it for a guilt-free dining experience that's both robust and eco-friendly.",
+    "Our Tissue General offers the perfect blend of resilience and responsibility. With excellent absorbency and strength, it tackles spills and messes effectively. Plus, it's an eco-friendly choice, crafted from sustainable materials to help maintain hygiene while preserving the planet.",
+    "Our Container is not just for storing your meals; it's designed to last. Its sturdy construction ensures that your food remains fresh, safe, and secure. What's more, it's an eco-conscious choice, made from sustainable materials, so you can savor your meals knowing you're making a responsible choice for the environment",
+    "Our Toothpicks are more than just handy tools; they're crafted to withstand the rigors of daily use. Their sturdiness makes them perfect for a variety of tasks. In addition to durability, they are made from sustainable materials, combining strength with eco-friendliness to meet your needs while caring for the planet.",
+  ];
+
+  final random = Random();
+  int randomIndex = 0;
+
   @override
   void initState() {
     super.initState();
     imageUrl = widget.imageUrl;
     prodName = widget.productName;
+
+    randomIndex = random.nextInt(desc.length);
 
     selectedItems = [options[0]];
   }
@@ -105,7 +118,7 @@ class _DisplayItemPageState extends State<DisplayItemPage> {
                       left: 3,
                     ),
                     child: Text(
-                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.",
+                      desc[randomIndex],
                       style: TextStyle(
                         fontSize: 15.0,
                         color: Colors.grey.shade600,
@@ -157,6 +170,12 @@ class _DisplayItemPageState extends State<DisplayItemPage> {
                       );
                     },
                     text: "Add to Wishlist",
+                  ),
+                  RoundedBorderButtonGreen(
+                    onTap: () {
+                      _shareOnWhatsApp();
+                    },
+                    text: "Whatsapp Share",
                   ),
                   Padding(
                     padding: const EdgeInsets.only(
@@ -239,59 +258,6 @@ class _DisplayItemPageState extends State<DisplayItemPage> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(
-                      bottom: 20.0,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Expanded(
-                          child: Chip(
-                            label: const Text("Feature 4"),
-                            avatar: const Icon(
-                              Icons.check,
-                              color: Colors.green,
-                            ),
-                            backgroundColor: Colors.green.shade100,
-                            labelStyle: const TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        Expanded(
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: Chip(
-                              label: const Text("Feature 5"),
-                              avatar: const Icon(
-                                Icons.check,
-                                color: Colors.green,
-                              ),
-                              backgroundColor: Colors.green.shade100,
-                              labelStyle: const TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Chip(
-                            label: const Text("Feature 6"),
-                            avatar: const Icon(
-                              Icons.check,
-                              color: Colors.green,
-                            ),
-                            backgroundColor: Colors.green.shade100,
-                            labelStyle: const TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(
                       top: 5.0,
                     ),
                     child: Container(
@@ -325,24 +291,19 @@ class _DisplayItemPageState extends State<DisplayItemPage> {
             child: Column(
               children: [
                 FloatingActionButton(
-                  onPressed: () {
-                    _shareOnWhatsApp();
+                  onPressed: () async {
+                    if (!await launchUrl(Uri.parse("tel:9168202971"))) {
+                      throw Exception('Could not launch');
+                    }
                   },
                   backgroundColor: Colors.green.shade50,
-                  child: Image.asset(
-                    "assets/images/what.png",
-                    width: 30.0,
+                  child: const Icon(
+                    Icons.call,
+                    size: 30.0,
                   ),
                 ),
                 const SizedBox(
                   height: 20.0,
-                ),
-                FloatingActionButton(
-                  onPressed: () {
-                    _launchCall();
-                  },
-                  backgroundColor: Colors.green.shade50,
-                  child: const Icon(Icons.call),
                 ),
               ],
             ),
@@ -350,12 +311,6 @@ class _DisplayItemPageState extends State<DisplayItemPage> {
         ],
       ),
     );
-  }
-
-  Future<void> _launchCall() async {
-    if (!await launchUrl(Uri.parse("tel:9168202971"))) {
-      throw Exception('Could not launch');
-    }
   }
 
   Future<void> _shareOnWhatsApp() async {
@@ -746,6 +701,50 @@ class RoundedBorderButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(12.0),
           ),
           backgroundColor: Colors.yellow.shade300,
+          minimumSize: Size(
+            MediaQuery.of(context).size.width,
+            50.0,
+          ),
+        ),
+        child: Text(
+          text,
+          style: const TextStyle(
+            fontSize: 17.0,
+            color: Colors.black,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class RoundedBorderButtonGreen extends StatelessWidget {
+  final VoidCallback onTap;
+  final String text;
+
+  const RoundedBorderButtonGreen({
+    Key? key,
+    required this.onTap,
+    required this.text,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(
+        top: 28.0,
+      ),
+      child: ElevatedButton(
+        onPressed: onTap,
+        style: ElevatedButton.styleFrom(
+          side: BorderSide(
+            color: Colors.green.shade900,
+            width: MediaQuery.of(context).size.width * 0.002,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12.0),
+          ),
+          backgroundColor: Colors.green.shade100,
           minimumSize: Size(
             MediaQuery.of(context).size.width,
             50.0,

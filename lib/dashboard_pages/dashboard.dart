@@ -823,36 +823,49 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     top: 30,
                   ),
                   width: MediaQuery.of(context).size.width,
-                  color: Colors.grey.shade200,
+                  // color: Colors.green.shade50,
                   height: 380.0,
                   child: const Align(
                     alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 30.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Live\nit up!",
-                            style: TextStyle(
-                              fontSize: 80.0,
-                              fontWeight: FontWeight.w900,
-                              color: Colors.grey,
-                              height: 1.2,
+                    child: Stack(
+                      children: [
+                        SizedBox(
+                          height: 380.0,
+                          child: Image(
+                            image: AssetImage(
+                              "assets/images/liveitup.jpg",
                             ),
-                            textAlign: TextAlign.start,
+                            fit: BoxFit.cover,
                           ),
-                          Text(
-                            "\nCrafted especially for your Convenience",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w700,
-                              color: Colors.grey,
-                              height: 1.2,
-                            ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 30.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Live\nit up!",
+                                style: TextStyle(
+                                  fontSize: 80.0,
+                                  fontWeight: FontWeight.w900,
+                                  color: Colors.white,
+                                  height: 1.2,
+                                ),
+                                textAlign: TextAlign.start,
+                              ),
+                              Text(
+                                "\nCrafted especially for your Convenience",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.white,
+                                  height: 1.2,
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -868,6 +881,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
             child: Column(
               children: [
                 FloatingActionButton(
+                  onPressed: () async {
+                    if (!await launchUrl(Uri.parse("tel:9168202971"))) {
+                      throw Exception('Could not launch');
+                    }
+                  },
+                  backgroundColor: Colors.green.shade50,
+                  child: const Icon(Icons.call),
+                ),
+                const SizedBox(
+                  height: 20.0,
+                ),
+                FloatingActionButton(
                   onPressed: () {
                     _launchUrl();
                   },
@@ -876,16 +901,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     "assets/images/what.png",
                     width: 30.0,
                   ),
-                ),
-                const SizedBox(
-                  height: 20.0,
-                ),
-                FloatingActionButton(
-                  onPressed: () {
-                    _launchCall();
-                  },
-                  backgroundColor: Colors.green.shade50,
-                  child: const Icon(Icons.call),
                 ),
               ],
             ),
@@ -897,12 +912,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Future<void> _launchUrl() async {
     if (!await launchUrl(Uri.parse("https://wa.me/919168202971"))) {
-      throw Exception('Could not launch');
-    }
-  }
-
-  Future<void> _launchCall() async {
-    if (!await launchUrl(Uri.parse("tel:9168202971"))) {
       throw Exception('Could not launch');
     }
   }

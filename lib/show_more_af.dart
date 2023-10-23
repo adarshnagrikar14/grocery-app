@@ -253,6 +253,8 @@ class _ShowProductAllState extends State<ShowProductAll> {
                         assetUrl: assetUrl,
                         title: title,
                         type: type,
+                        description:
+                            "This is a 100ml/4 oz multipurpose container with PET lid available.",
                       );
                     },
                   ),

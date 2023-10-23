@@ -219,6 +219,8 @@ class _RestaurantPageState extends State<RestaurantPage> {
                     assetUrl: imageUrl[index],
                     title: "Product ${index + 1}: Restaurants",
                     type: 'Restaurant Items',
+                    description:
+                        "This is a 100ml/4 oz multipurpose container with PET lid available.",
                   );
                 },
               ),

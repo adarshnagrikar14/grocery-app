@@ -219,6 +219,8 @@ class _BakersPageState extends State<BakersPage> {
                     assetUrl: imageUrl[index],
                     title: "Product ${index + 1}: Bakers",
                     type: 'Bakers Items',
+                    description:
+                        "This is a 100ml/4 oz multipurpose container with PET lid available.",
                   );
                 },
               ),
