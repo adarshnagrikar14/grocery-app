@@ -5,7 +5,6 @@ import 'package:demoapp/cust_card_row.dart';
 import 'package:demoapp/dashboard_pages/search.dart';
 import 'package:demoapp/display_items.dart';
 import 'package:demoapp/more_brands.dart';
-import 'package:demoapp/show_more_af.dart';
 import 'package:demoapp/types/plates.dart';
 import 'package:demoapp/types/container.dart';
 import 'package:demoapp/types/tissues.dart';
@@ -13,6 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../show_more_af_2.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -35,6 +36,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   List<String> options = [
+    "All",
     "Affordable",
     "Reasonable",
     "Premium\n",
@@ -618,7 +620,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const ShowProductAll(),
+                        builder: (context) => const ShowProductAll2(),
+                        // builder: (context) => const ShowProductAll(),
                       ),
                     );
                   },
@@ -825,11 +828,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   width: MediaQuery.of(context).size.width,
                   // color: Colors.green.shade50,
                   height: 380.0,
-                  child: const Align(
+                  child: Align(
                     alignment: Alignment.centerLeft,
                     child: Stack(
                       children: [
-                        SizedBox(
+                        const SizedBox(
                           height: 380.0,
                           child: Image(
                             image: AssetImage(
@@ -839,7 +842,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(left: 30.0),
+                          padding: const EdgeInsets.only(left: 30.0),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -849,16 +852,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 style: TextStyle(
                                   fontSize: 80.0,
                                   fontWeight: FontWeight.w900,
-                                  color: Colors.white,
+                                  color: Colors.grey.shade700,
                                   height: 1.2,
                                 ),
                                 textAlign: TextAlign.start,
                               ),
-                              Text(
+                              const Text(
                                 "\nCrafted especially for your Convenience",
                                 style: TextStyle(
                                   fontWeight: FontWeight.w700,
-                                  color: Colors.white,
+                                  color: Colors.black54,
                                   height: 1.2,
                                 ),
                               ),
