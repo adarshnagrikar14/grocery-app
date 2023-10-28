@@ -25,7 +25,6 @@ class _ShowProductAllState extends State<ShowProductAll2> {
 
   late String crockeryType;
 
-  // selected filters
   List<String> selectedCost = [];
   List<String> selectedSize = [];
   List<String> selectedColor = [];

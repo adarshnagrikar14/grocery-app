@@ -5,6 +5,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:chips_choice/chips_choice.dart';
+import 'package:demoapp/wishlist/wishlist_af.dart';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -12,7 +13,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:whatsapp_share/whatsapp_share.dart';
 
@@ -30,6 +30,7 @@ class DisplayItemPage extends StatefulWidget {
 class _DisplayItemPageState extends State<DisplayItemPage> {
   String imageUrl = "";
   String prodName = "";
+  String prodDescription = "";
 
   List<String> selectedItems = [];
 
@@ -39,8 +40,6 @@ class _DisplayItemPageState extends State<DisplayItemPage> {
     "Small Size",
     "Easy to use",
   ];
-
-  bool isAddingToWishlist = false;
 
   List<String> desc = [
     "Our Plate Cardboard is more than just a serving solution; it's your sustainable partner. Crafted from durable materials, it's designed to withstand the weight of your favorite dishes while being environmentally conscious. Choose it for a guilt-free dining experience that's both robust and eco-friendly.",
@@ -55,11 +54,12 @@ class _DisplayItemPageState extends State<DisplayItemPage> {
   @override
   void initState() {
     super.initState();
-    imageUrl = widget.imageUrl;
-    prodName = widget.productName;
 
     randomIndex = random.nextInt(desc.length);
 
+    imageUrl = widget.imageUrl;
+    prodName = widget.productName;
+    prodDescription = desc[randomIndex];
     selectedItems = [options[0]];
   }
 
@@ -163,7 +163,7 @@ class _DisplayItemPageState extends State<DisplayItemPage> {
                         builder: (BuildContext context) {
                           return SizeFilter(
                             onFilterApplied: (sizeSelected) {
-                              addToWishlist(sizeSelected);
+                              addToWishlist(sizeSelected, desc[randomIndex]);
                             },
                           );
                         },
@@ -305,6 +305,19 @@ class _DisplayItemPageState extends State<DisplayItemPage> {
                 const SizedBox(
                   height: 20.0,
                 ),
+                FloatingActionButton(
+                  onPressed: () async {
+                    if (!await launchUrl(
+                        Uri.parse("https://wa.me/919168202971"))) {
+                      throw Exception('Could not launch');
+                    }
+                  },
+                  backgroundColor: Colors.green.shade50,
+                  child: Image.asset(
+                    "assets/images/what.png",
+                    width: 30.0,
+                  ),
+                ),
               ],
             ),
           ),
@@ -329,7 +342,7 @@ class _DisplayItemPageState extends State<DisplayItemPage> {
         await file2.writeAsBytes(textImage);
 
         await WhatsappShare.shareFile(
-          phone: '917620216605',
+          phone: '919168202971',
           filePath: [
             file1.path,
             file2.path,
@@ -388,119 +401,19 @@ class _DisplayItemPageState extends State<DisplayItemPage> {
     return imgByteData!.buffer.asUint8List();
   }
 
-  void addToWishlist(String string) async {
-    await saveToSharedPreferences(imageUrl, prodName, string);
-
-    showDialog(
-      context: context,
-      builder: (context) {
-        return const Align(
-          alignment: Alignment.center,
-          child: SizedBox(
-            width: 50.0,
-            height: 50.0,
-            child: CircularProgressIndicator(
-              color: Colors.green,
-            ),
-          ),
-        );
-      },
+  void addToWishlist(String prodSize, String prodDesc) async {
+    String result = await saveItemToDB(
+      imageUrl,
+      prodName,
+      prodSize,
+      prodDesc,
     );
-  }
 
-  Future<void> saveToSharedPreferences(
-      String imageUrl, String title, String string) async {
-    setState(() {
-      isAddingToWishlist = true;
-    });
-
-    final prefs = await SharedPreferences.getInstance();
-    List<String> wishlist = prefs.getStringList('Wishlist3') ?? [];
-    wishlist.add('$imageUrl;$title;$string');
-    await prefs.setStringList('Wishlist3', wishlist);
-
-    // dismiss indicartor
-    Timer(
-      const Duration(
-        milliseconds: 1500,
-      ),
-      () {
-        setState(() {
-          isAddingToWishlist = false;
-        });
-        Navigator.of(context).pop();
-        Fluttertoast.showToast(msg: "Item Added to wishlist");
-
-        showModalBottomSheet(
-          context: context,
-          builder: (BuildContext context) {
-            return SizedBox(
-              height: 250.0,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Center(
-                      child: Container(
-                        width: 60.0,
-                        height: 5.0,
-                        decoration: BoxDecoration(
-                          color: Colors.grey,
-                          borderRadius: BorderRadius.circular(15.0),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(
-                      top: 12.0,
-                      left: 12.0,
-                    ),
-                    child: ListTile(
-                      title: Text(
-                        "Item Added to Wishlist",
-                        style: TextStyle(
-                          fontSize: 18.0,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(
-                      left: 25.0,
-                      right: 25.0,
-                    ),
-                    child: Text(
-                      "You can watch it in wishlist section",
-                      style: TextStyle(
-                        fontSize: 15.0,
-                        color: Colors.black45,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      bottom: 20.0,
-                      left: 25.0,
-                      right: 25.0,
-                    ),
-                    child: RoundedBorderButton(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      text: "Done",
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
-        );
-      },
-    );
+    if (result == "Success") {
+      Fluttertoast.showToast(msg: "Item Added to wishlist");
+    } else {
+      Fluttertoast.showToast(msg: "Retry Adding Item.");
+    }
   }
 }
 

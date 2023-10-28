@@ -309,7 +309,7 @@ class _CustomCardRowState extends State<CustomCardRow> {
         await file2.writeAsBytes(textImage);
 
         await WhatsappShare.shareFile(
-          phone: '917620216605',
+          phone: '919168202971',
           filePath: [
             file1.path,
             file2.path,

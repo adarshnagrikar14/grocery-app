@@ -157,7 +157,7 @@ Future<void> _shareOnWhatsApp(String assetUrl, String title) async {
       await file2.writeAsBytes(textImage);
 
       await WhatsappShare.shareFile(
-        phone: '917620216605',
+        phone: '919168202971',
         filePath: [
           file1.path,
           file2.path,
