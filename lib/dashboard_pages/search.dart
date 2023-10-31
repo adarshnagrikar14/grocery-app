@@ -1,4 +1,4 @@
-import 'package:demoapp/display_items.dart';
+import 'package:demoapp/display/display_items.dart';
 import 'package:demoapp/types/container.dart';
 import 'package:demoapp/types/plates.dart';
 import 'package:demoapp/types/tissues.dart';

@@ -3,12 +3,12 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:demoapp/display/display_item_af.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:whatsapp_share/whatsapp_share.dart';
-import 'display_items.dart';
 
 import 'dart:ui' as ui;
 
@@ -33,8 +33,10 @@ class CustomCard3 extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) =>
-                DisplayItemPage(imageUrl: assetUrl, productName: title),
+            builder: (context) => DisplayItemPage(
+              imageUrl: assetUrl,
+              productName: title,
+            ),
           ),
         );
       },

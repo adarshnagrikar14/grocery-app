@@ -1,4 +1,4 @@
-import 'package:demoapp/display_items.dart';
+import 'package:demoapp/display/display_items.dart';
 import 'package:flutter/material.dart';
 
 class CustomCard2 extends StatelessWidget {

@@ -20,8 +20,11 @@ class DisplayItemPage extends StatefulWidget {
   final String imageUrl;
   final String productName;
 
-  const DisplayItemPage(
-      {super.key, required this.imageUrl, required this.productName});
+  const DisplayItemPage({
+    super.key,
+    required this.imageUrl,
+    required this.productName,
+  });
 
   @override
   State<DisplayItemPage> createState() => _DisplayItemPageState();
@@ -402,6 +405,8 @@ class _DisplayItemPageState extends State<DisplayItemPage> {
   }
 
   void addToWishlist(String prodSize, String prodDesc) async {
+    _showCustomProgressDialog(context);
+
     String result = await saveItemToDB(
       imageUrl,
       prodName,
@@ -409,11 +414,49 @@ class _DisplayItemPageState extends State<DisplayItemPage> {
       prodDesc,
     );
 
+    // dis dialog
+    Navigator.of(context).pop();
+
     if (result == "Success") {
       Fluttertoast.showToast(msg: "Item Added to wishlist");
     } else {
       Fluttertoast.showToast(msg: "Retry Adding Item.");
     }
+  }
+
+  void _showCustomProgressDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          child: Container(
+            width: 100,
+            height: 100,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12.0),
+            ),
+            child: const Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(
+                    color: Colors.green,
+                  ),
+                  SizedBox(
+                    height: 12.0,
+                  ),
+                  Text("Adding to wishlist..."),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 }
 
@@ -582,8 +625,8 @@ class _SizeFilterState extends State<SizeFilter> {
   }
 
   void applyFilter() {
-    widget.onFilterApplied(selectedSize[0]);
     Navigator.pop(context);
+    widget.onFilterApplied(selectedSize[0]);
   }
 }
 

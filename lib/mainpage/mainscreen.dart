@@ -5,12 +5,12 @@ import 'package:circular_bottom_navigation/tab_item.dart';
 import 'package:demoapp/dashboard_pages/dashboard.dart';
 import 'package:demoapp/dashboard_pages/notification.dart';
 import 'package:demoapp/dashboard_pages/settings.dart';
-import 'package:demoapp/dashboard_pages/wishlist.dart';
 import 'package:demoapp/side_menu/bakers.dart';
 import 'package:demoapp/side_menu/bars.dart';
 import 'package:demoapp/side_menu/caterers.dart';
 import 'package:demoapp/side_menu/hotels.dart';
 import 'package:demoapp/side_menu/restaurant.dart';
+import 'package:demoapp/wishlist/displaywishlist.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -86,6 +86,7 @@ class _MainScreenState extends State<MainScreen> {
 
     final List widgetOptions = [
       const DashboardScreen(),
+      // const WishlistPage(),
       const WishlistPage(),
       const NotificationPage(),
       const SettingsPage()

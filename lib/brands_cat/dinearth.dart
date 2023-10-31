@@ -1,5 +1,5 @@
 import 'package:chips_choice/chips_choice.dart';
-import 'package:demoapp/cust_card_linear.dart';
+import 'package:demoapp/cust_cards/cust_card_linear.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:url_launcher/url_launcher.dart';

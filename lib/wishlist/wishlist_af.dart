@@ -20,15 +20,31 @@ Future<String> saveItemToDB(String imageUrl, String productName,
       if (response.body == "Success") {
         return "Success";
       } else {
-        print("Item could not be saved. ${response.body}");
         return "Failed";
       }
     } else {
-      print("Failed to connect to the server.");
       return "Failed";
     }
-  } catch (e) {
-    print("An error occurred: $e");
+  } catch (ex) {
+    return "Failed";
+  }
+}
+
+Future<String> deleteItemFromDB(String timestamp) async {
+  final url = Uri.parse(
+      'https://assignme-work.000webhostapp.com/venus/deletewishitem.php');
+  final response = await http.post(url, body: {
+    'userID': FirebaseAuth.instance.currentUser!.uid,
+    'timestamp': timestamp,
+  });
+
+  if (response.statusCode == 200) {
+    if (response.body == "Success") {
+      return "Success";
+    } else {
+      return "Failed";
+    }
+  } else {
     return "Failed";
   }
 }

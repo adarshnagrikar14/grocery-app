@@ -1,10 +1,10 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:chips_choice/chips_choice.dart';
 import 'package:demoapp/brands_cat/dinearth.dart';
-import 'package:demoapp/cust_card_row.dart';
+import 'package:demoapp/cust_cards/cust_card_row.dart';
 import 'package:demoapp/dashboard_pages/search.dart';
-import 'package:demoapp/display_items.dart';
-import 'package:demoapp/more_brands.dart';
+import 'package:demoapp/display/display_items.dart';
+import 'package:demoapp/brands_cat/more_brands.dart';
 import 'package:demoapp/types/plates.dart';
 import 'package:demoapp/types/container.dart';
 import 'package:demoapp/types/tissues.dart';
@@ -13,7 +13,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../show_more_af_2.dart';
+import '../show_more/show_more_af_2.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});

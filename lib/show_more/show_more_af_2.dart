@@ -2,14 +2,14 @@
 
 import 'dart:convert';
 import 'package:chips_choice/chips_choice.dart';
+import 'package:demoapp/cust_cards/cust_card_linear.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:lottie/lottie.dart';
 
-import 'cust_card_linear.dart';
-import 'dashboard_pages/search.dart';
+import '../dashboard_pages/search.dart';
 
 class ShowProductAll2 extends StatefulWidget {
   const ShowProductAll2({Key? key}) : super(key: key);
