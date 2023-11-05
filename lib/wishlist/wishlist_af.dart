@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 
 Future<String> saveItemToDB(String imageUrl, String productName,
-    String productSize, String productDescription) async {
+    String productSize, String productDescription, String productID) async {
   final url = Uri.parse(
     'https://assignme-work.000webhostapp.com/venus/wishlist.php',
   );
@@ -13,6 +13,7 @@ Future<String> saveItemToDB(String imageUrl, String productName,
       'imageUrl': imageUrl,
       'productName': productName,
       'productSize': productSize,
+      'productID': productID,
       'productDescription': productDescription,
     });
 

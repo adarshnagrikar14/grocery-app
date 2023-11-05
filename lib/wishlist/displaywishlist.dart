@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:demoapp/display/display_items.dart';
+import 'package:demoapp/display/display_item_af.dart';
 import 'package:demoapp/wishlist/wishlist_af.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +21,7 @@ class WishlistItem {
   final String sizeOption;
   final String description;
   final String timeStamp;
+  final String productID;
 
   WishlistItem({
     required this.imageUrl,
@@ -28,6 +29,7 @@ class WishlistItem {
     required this.sizeOption,
     required this.description,
     required this.timeStamp,
+    required this.productID,
   });
 }
 
@@ -72,6 +74,7 @@ class _WishlistPageState extends State<WishlistPage> {
             sizeOption: item['ProductSize'],
             description: item['ProductDescription'],
             timeStamp: item['TimeStamp'],
+            productID: item['ProductId'],
           );
         }).toList();
 
@@ -146,8 +149,9 @@ class _WishlistPageState extends State<WishlistPage> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => DisplayItemPage(
-                    imageUrl: wishlistItems[index].imageUrl,
-                    productName: wishlistItems[index].title,
+                    productID: wishlistItems[index].productID.isEmpty
+                        ? "1"
+                        : wishlistItems[index].productID,
                   ),
                 ),
               );

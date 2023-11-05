@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously, library_private_types_in_public_api, avoid_print
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
@@ -13,17 +14,17 @@ import 'package:flutter/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:whatsapp_share/whatsapp_share.dart';
+import 'package:http/http.dart' as http;
 
 class DisplayItemPage extends StatefulWidget {
-  final String imageUrl;
-  final String productName;
+  final String productID;
 
   const DisplayItemPage({
     super.key,
-    required this.imageUrl,
-    required this.productName,
+    required this.productID,
   });
 
   @override
@@ -31,18 +32,9 @@ class DisplayItemPage extends StatefulWidget {
 }
 
 class _DisplayItemPageState extends State<DisplayItemPage> {
-  String imageUrl = "";
-  String prodName = "";
+  late String imageUrl;
+  late String prodName;
   String prodDescription = "";
-
-  List<String> selectedItems = [];
-
-  List<String> options = [
-    "Affordable",
-    "Multicolor",
-    "Small Size",
-    "Easy to use",
-  ];
 
   List<String> desc = [
     "Our Plate Cardboard is more than just a serving solution; it's your sustainable partner. Crafted from durable materials, it's designed to withstand the weight of your favorite dishes while being environmentally conscious. Choose it for a guilt-free dining experience that's both robust and eco-friendly.",
@@ -54,16 +46,52 @@ class _DisplayItemPageState extends State<DisplayItemPage> {
   final random = Random();
   int randomIndex = 0;
 
+  int quantity = 2;
+
+  void incrementQuantity() {
+    setState(() {
+      quantity++;
+    });
+  }
+
+  void decrementQuantity() {
+    if (quantity > 1) {
+      setState(() {
+        quantity--;
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
 
-    randomIndex = random.nextInt(desc.length);
+    imageUrl = "";
+    prodName = "";
 
-    imageUrl = widget.imageUrl;
-    prodName = widget.productName;
+    randomIndex = random.nextInt(desc.length);
     prodDescription = desc[randomIndex];
-    selectedItems = [options[0]];
+
+    fetchProductData(widget.productID);
+  }
+
+  Future<void> fetchProductData(String productID) async {
+    final url = Uri.parse(
+      'https://assignme-work.000webhostapp.com/venus/depthfetch.php?ProductID=$productID',
+    );
+
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      setState(() {
+        imageUrl = data['ImageLink'];
+        prodName = data['ProductName'];
+        prodDescription = data['ProductDescription'];
+      });
+    } else {
+      Fluttertoast.showToast(msg: "Failed to fetch product data.");
+    }
   }
 
   @override
@@ -93,17 +121,91 @@ class _DisplayItemPageState extends State<DisplayItemPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(15.0),
-                    child: Image.asset(
-                      imageUrl,
-                      width: MediaQuery.of(context).size.width,
-                      fit: BoxFit.cover,
+                  Stack(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(15.0),
+                        child: Image.asset(
+                          imageUrl,
+                          width: MediaQuery.of(context).size.width,
+                          fit: BoxFit.cover,
+                          height: MediaQuery.of(context).size.width,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          right: 10.0,
+                          top: 10.0,
+                        ),
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute<void>(
+                                builder: (BuildContext context) {
+                                  return Scaffold(
+                                    appBar: AppBar(
+                                      title: Text(
+                                        prodName,
+                                      ),
+                                      flexibleSpace: Container(
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            colors: [
+                                              Colors.green.shade100,
+                                              Colors.green.shade50,
+                                              Colors.green.shade50,
+                                            ],
+                                            begin: Alignment.topCenter,
+                                            end: Alignment.bottomCenter,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    body: PhotoView(
+                                      imageProvider: AssetImage(
+                                        imageUrl,
+                                      ),
+                                      minScale:
+                                          PhotoViewComputedScale.contained,
+                                      backgroundDecoration: const BoxDecoration(
+                                        color: Colors.white,
+                                      ),
+                                      maxScale:
+                                          PhotoViewComputedScale.covered * 2,
+                                    ),
+                                  );
+                                },
+                              ),
+                            );
+                          },
+                          child: Align(
+                            alignment: Alignment.topRight,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10.0),
+                              child: Container(
+                                color: Colors.white,
+                                child: const Icon(
+                                  Icons.zoom_out_map,
+                                  size: 32.0,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(
+                      top: 20.0,
                     ),
+                    width: MediaQuery.of(context).size.width,
+                    height: 1.2,
+                    color: Colors.grey,
                   ),
                   Padding(
                     padding: const EdgeInsets.only(
-                      top: 23.0,
+                      top: 10.0,
                       left: 3,
                     ),
                     child: Text(
@@ -122,10 +224,9 @@ class _DisplayItemPageState extends State<DisplayItemPage> {
                     ),
                     child: Text(
                       desc[randomIndex],
-                      style: TextStyle(
-                        fontSize: 15.0,
-                        color: Colors.grey.shade600,
-                        fontWeight: FontWeight.w700,
+                      style: const TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.w300,
                       ),
                       maxLines: 4,
                       softWrap: true,
@@ -158,15 +259,51 @@ class _DisplayItemPageState extends State<DisplayItemPage> {
                     height: 1.2,
                     color: Colors.grey,
                   ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      top: 18.0,
+                      left: 3,
+                    ),
+                    child: Text(
+                      "Add to your Wishlist",
+                      style: TextStyle(
+                        fontSize: 17.0,
+                        color: Colors.black87.withAlpha(180),
+                        fontWeight: FontWeight.w600,
+                      ),
+                      maxLines: 4,
+                      softWrap: true,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      top: 5.0,
+                      left: 3,
+                      bottom: 5.0,
+                    ),
+                    child: Text(
+                      "Product by Venus (India) Incorporation.",
+                      style: TextStyle(
+                        fontSize: 12.0,
+                        color: Colors.black87.withAlpha(130),
+                        fontWeight: FontWeight.w600,
+                      ),
+                      maxLines: 4,
+                      softWrap: true,
+                    ),
+                  ),
                   RoundedBorderButton(
                     onTap: () {
-                      // addToWishlist();
                       showModalBottomSheet(
                         context: context,
                         builder: (BuildContext context) {
                           return SizeFilter(
                             onFilterApplied: (sizeSelected) {
-                              addToWishlist(sizeSelected, desc[randomIndex]);
+                              addToWishlist(
+                                sizeSelected,
+                                desc[randomIndex],
+                                widget.productID,
+                              );
                             },
                           );
                         },
@@ -174,15 +311,94 @@ class _DisplayItemPageState extends State<DisplayItemPage> {
                     },
                     text: "Add to Wishlist",
                   ),
-                  RoundedBorderButtonGreen(
-                    onTap: () {
-                      _shareOnWhatsApp();
-                    },
-                    text: "Whatsapp Share",
-                  ),
                   Padding(
                     padding: const EdgeInsets.only(
                       top: 15.0,
+                    ),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 1.2,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      top: 18.0,
+                      left: 3,
+                    ),
+                    child: Text(
+                      "Whatsapp Us",
+                      style: TextStyle(
+                        fontSize: 17.0,
+                        color: Colors.black87.withAlpha(180),
+                        fontWeight: FontWeight.w600,
+                      ),
+                      maxLines: 4,
+                      softWrap: true,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      top: 8.0,
+                      left: 3,
+                      bottom: 10.0,
+                    ),
+                    child: Text(
+                      "Select the Quantity and hit Whatsapp Share to Send your Choice Directly to Us.",
+                      style: TextStyle(
+                        fontSize: 12.0,
+                        color: Colors.black87.withAlpha(130),
+                        fontWeight: FontWeight.w600,
+                      ),
+                      maxLines: 4,
+                      softWrap: true,
+                    ),
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Row(
+                          children: <Widget>[
+                            IconButton(
+                              onPressed: decrementQuantity,
+                              icon: const Icon(Icons.remove),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 5.0,
+                                vertical: 2.50,
+                              ),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey),
+                                borderRadius: BorderRadius.circular(6.0),
+                              ),
+                              child: Text(
+                                '$quantity',
+                                style: const TextStyle(fontSize: 20),
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: incrementQuantity,
+                              icon: const Icon(Icons.add),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: RoundedBorderButtonGreen(
+                          onTap: () {
+                            _shareOnWhatsApp();
+                          },
+                          text: "Whatsapp Share",
+                        ),
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      top: 25.0,
                     ),
                     child: Container(
                       width: MediaQuery.of(context).size.width,
@@ -330,11 +546,13 @@ class _DisplayItemPageState extends State<DisplayItemPage> {
   }
 
   Future<void> _shareOnWhatsApp() async {
-    final ByteData byteData = await rootBundle.load(widget.imageUrl);
+    final ByteData byteData = await rootBundle.load(imageUrl);
     final Directory? directory1 = await getExternalStorageDirectory();
 
     final List<int> imageData = byteData.buffer.asUint8List();
-    final textImage = await textToImage(widget.productName);
+
+    String textToConvt = "$prodName. Quantity: ${quantity.toString()}";
+    final textImage = await textToImage(textToConvt);
 
     if (directory1 != null) {
       final File file2 = File('${directory1.path}/shareable_text.jpg');
@@ -404,7 +622,7 @@ class _DisplayItemPageState extends State<DisplayItemPage> {
     return imgByteData!.buffer.asUint8List();
   }
 
-  void addToWishlist(String prodSize, String prodDesc) async {
+  void addToWishlist(String prodSize, String prodDesc, String productID) async {
     _showCustomProgressDialog(context);
 
     String result = await saveItemToDB(
@@ -412,6 +630,7 @@ class _DisplayItemPageState extends State<DisplayItemPage> {
       prodName,
       prodSize,
       prodDesc,
+      productID,
     );
 
     // dis dialog
@@ -644,7 +863,7 @@ class RoundedBorderButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(
-        top: 28.0,
+        top: 18.0,
       ),
       child: ElevatedButton(
         onPressed: onTap,
@@ -688,7 +907,8 @@ class RoundedBorderButtonGreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(
-        top: 28.0,
+        top: 12.0,
+        left: 10,
       ),
       child: ElevatedButton(
         onPressed: onTap,
@@ -703,15 +923,36 @@ class RoundedBorderButtonGreen extends StatelessWidget {
           backgroundColor: Colors.green.shade100,
           minimumSize: Size(
             MediaQuery.of(context).size.width,
-            50.0,
+            55.0,
           ),
         ),
-        child: Text(
-          text,
-          style: const TextStyle(
-            fontSize: 17.0,
-            color: Colors.black,
-          ),
+        child: Row(
+          children: [
+            Container(
+              width: 50,
+              height: 50,
+              padding: const EdgeInsets.all(
+                12.0,
+              ),
+              child: Image.asset(
+                'assets/images/what.png',
+                fit: BoxFit.cover,
+              ),
+            ),
+            Expanded(
+              child: Center(
+                child: Text(
+                  text,
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 17.0,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

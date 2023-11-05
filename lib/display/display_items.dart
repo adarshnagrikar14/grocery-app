@@ -412,6 +412,7 @@ class _DisplayItemPageState extends State<DisplayItemPage> {
       prodName,
       prodSize,
       prodDesc,
+      "1",
     );
 
     // dis dialog

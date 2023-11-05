@@ -3,7 +3,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:demoapp/display/display_items.dart';
+import 'package:demoapp/display/display_item_af.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -17,13 +17,15 @@ class CustomCard3 extends StatelessWidget {
   final String title;
   final String type;
   final String description;
+  final String productID;
 
   const CustomCard3({
     required this.assetUrl,
     required this.title,
     required this.type,
-    Key? key,
     required this.description,
+    required this.productID,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -34,8 +36,7 @@ class CustomCard3 extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => DisplayItemPage(
-              imageUrl: assetUrl,
-              productName: title,
+              productID: productID,
             ),
           ),
         );

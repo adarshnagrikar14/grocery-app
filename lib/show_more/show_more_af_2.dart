@@ -1,8 +1,9 @@
 // ignore_for_file: library_private_types_in_public_api
 
 import 'dart:convert';
+import 'dart:math';
 import 'package:chips_choice/chips_choice.dart';
-import 'package:demoapp/cust_cards/cust_card_linear.dart';
+import 'package:demoapp/cust_cards/cust_card_linear_productid.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -299,13 +300,24 @@ class _ShowProductAllState extends State<ShowProductAll2> {
                       final assetUrl = product['ImageLink'] ?? '';
                       final title = product['ProductName'] ?? '';
                       final type = product['Type'] ?? '';
+                      final productID = product['ProductId'] ?? "";
+
+                      List<String> desc = [
+                        "Our Plate Cardboard is more than just a serving solution; it's your sustainable partner. Crafted from durable materials, it's designed to withstand the weight of your favorite dishes while being environmentally conscious. Choose it for a guilt-free dining experience that's both robust and eco-friendly.",
+                        "Our Tissue General offers the perfect blend of resilience and responsibility. With excellent absorbency and strength, it tackles spills and messes effectively. Plus, it's an eco-friendly choice, crafted from sustainable materials to help maintain hygiene while preserving the planet.",
+                        "Our Container is not just for storing your meals; it's designed to last. Its sturdy construction ensures that your food remains fresh, safe, and secure. What's more, it's an eco-conscious choice, made from sustainable materials, so you can savor your meals knowing you're making a responsible choice for the environment",
+                        "Our Toothpicks are more than just handy tools; they're crafted to withstand the rigors of daily use. Their sturdiness makes them perfect for a variety of tasks. In addition to durability, they are made from sustainable materials, combining strength with eco-friendliness to meet your needs while caring for the planet.",
+                      ];
+
+                      final random = Random();
+                      int randomIndex = random.nextInt(desc.length);
 
                       return CustomCard3(
                         assetUrl: assetUrl,
                         title: title,
                         type: type,
-                        description:
-                            "This is a 100ml/4 oz multipurpose container with PET lid available.",
+                        productID: productID,
+                        description: desc[randomIndex],
                       );
                     },
                   ),
@@ -382,18 +394,20 @@ class _ShowProductAllState extends State<ShowProductAll2> {
                   itemCount: optionSort.length,
                   itemBuilder: (context, index) {
                     return RadioListTile(
-                      title: Text(optionSort[index]),
+                      title: Text(
+                        optionSort[index],
+                      ),
                       value: index,
                       groupValue: selectedSort,
                       onChanged: (int? value) {
-                        // setState(() {
-                        //   selectedSort = value!;
-                        //   products.shuffle();
-                        // });
-                        Navigator.pop(context);
+                        setState(() {
+                          selectedSort = value!;
+                        });
 
+                        Navigator.pop(context);
                         Fluttertoast.showToast(
-                            msg: "Applying ${optionSort[selectedSort]}");
+                          msg: "Applying ${optionSort[selectedSort]}",
+                        );
                       },
                     );
                   },
