@@ -158,7 +158,19 @@ Future<void> _shareOnWhatsApp(String assetUrl, String title) async {
       await file1.writeAsBytes(imageData);
       await file2.writeAsBytes(textImage);
 
+      Package package;
+
+      bool? isBusinessWhatsappInstalled =
+          await WhatsappShare.isInstalled(package: Package.businessWhatsapp);
+
+      if (isBusinessWhatsappInstalled == true) {
+        package = Package.businessWhatsapp;
+      } else {
+        package = Package.whatsapp;
+      }
+
       await WhatsappShare.shareFile(
+        package: package,
         phone: '919168202971',
         filePath: [
           file1.path,

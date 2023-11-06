@@ -181,30 +181,6 @@ class _CustomCardRowState extends State<CustomCardRow> {
   void addToWishlist(String string, BuildContext context) async {
     await saveToSharedPreferences(
         widget.assetUrl, widget.title, string, context);
-
-    // Timer(
-    //     const Duration(
-    //       milliseconds: 1500,
-    //     ),
-    //     () {
-
-    //     });
-
-    // showDialog(
-    //   context: context,
-    //   builder: (context) {
-    //     return const Align(
-    //       alignment: Alignment.center,
-    //       child: SizedBox(
-    //         width: 50.0,
-    //         height: 50.0,
-    //         child: CircularProgressIndicator(
-    //           color: Colors.green,
-    //         ),
-    //       ),
-    //     );
-    //   },
-    // );
   }
 
   Future<void> saveToSharedPreferences(String imageUrl, String title,
@@ -308,7 +284,19 @@ class _CustomCardRowState extends State<CustomCardRow> {
         await file1.writeAsBytes(imageData);
         await file2.writeAsBytes(textImage);
 
+        Package package;
+
+        bool? isBusinessWhatsappInstalled =
+            await WhatsappShare.isInstalled(package: Package.businessWhatsapp);
+
+        if (isBusinessWhatsappInstalled == true) {
+          package = Package.businessWhatsapp;
+        } else {
+          package = Package.whatsapp;
+        }
+
         await WhatsappShare.shareFile(
+          package: package,
           phone: '919168202971',
           filePath: [
             file1.path,
