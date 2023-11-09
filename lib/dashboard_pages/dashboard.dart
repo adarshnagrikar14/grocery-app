@@ -1,6 +1,10 @@
+import 'dart:convert';
+import 'dart:math';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:chips_choice/chips_choice.dart';
 import 'package:demoapp/brands_cat/dinearth.dart';
+import 'package:demoapp/cust_cards/cust_card_linear_productid.dart';
 import 'package:demoapp/cust_cards/cust_card_row.dart';
 import 'package:demoapp/dashboard_pages/search.dart';
 import 'package:demoapp/display/display_items.dart';
@@ -12,6 +16,8 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import 'package:http/http.dart' as http;
 
 import '../show_more/show_more_af_2.dart';
 
@@ -25,6 +31,8 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   List<String> selectedItems = [];
 
+  List<Map<String, dynamic>> products = [];
+
   int selectedImageCarousel = 0;
 
   @override
@@ -33,6 +41,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     selectedImageCarousel = 0;
     selectedItems = [options[0]];
+
+    fetchProducts();
   }
 
   List<String> options = [
@@ -48,6 +58,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
     "https://img.freepik.com/free-photo/top-view-table-arrangement-with-empty-dishes-tableware_23-2150310715.jpg?t=st=1696751332~exp=1696754932~hmac=9c00c291ce02f3620173807b03450408387ade102d765b3695f6170ebbe8d536&w=1060",
     "https://img.freepik.com/free-photo/top-view-brown-wooden-desk_140725-79653.jpg?w=1060&t=st=1696751464~exp=1696752064~hmac=190167f612d985d4c29a36752626f8026be96a21510dfbbc3238b00d5f6984fd"
   ];
+
+  Future<void> fetchProducts() async {
+    final response = await http.get(
+      Uri.parse('https://assignme-work.000webhostapp.com/venus/call.php'),
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = json.decode(response.body);
+
+      setState(
+        () {
+          products = List<Map<String, dynamic>>.from(data).take(5).toList();
+        },
+      );
+    } else {
+      Fluttertoast.showToast(msg: "Error Occurred.");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -821,9 +849,88 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                 ),
 
+                const Space(
+                  top: 22,
+                  bottom: 0,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 15.0,
+                    left: 20.0,
+                  ),
+                  child: Text(
+                    "Launches you would Love",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20.0,
+                      fontFamily: GoogleFonts.tiltNeon().fontFamily,
+                    ),
+                  ),
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 12.0,
+                    top: 15.0,
+                    right: 12.0,
+                  ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(
+                        8.0,
+                      ),
+                      border: Border.all(
+                        color: Colors.black38,
+                      ),
+                    ),
+                    child: const Padding(
+                      padding: EdgeInsets.all(
+                        8.0,
+                      ),
+                      child: Text(
+                        "Showing some of Our hot launches to fulfill what you want.",
+                        style: TextStyle(
+                          fontSize: 14.0,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+                ListView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: products.length,
+                  itemBuilder: (context, index) {
+                    final product = products[index];
+                    final assetUrl = product['ImageLink'] ?? '';
+                    final title = product['ProductName'] ?? '';
+                    final type = product['ProductType'] ?? '';
+                    final productID = product['ProductId'] ?? "";
+
+                    List<String> desc = [
+                      "Our Plate Cardboard is more than just a serving solution; it's your sustainable partner. Crafted from durable materials, it's designed to withstand the weight of your favorite dishes while being environmentally conscious. Choose it for a guilt-free dining experience that's both robust and eco-friendly.",
+                      "Our Tissue General offers the perfect blend of resilience and responsibility. With excellent absorbency and strength, it tackles spills and messes effectively. Plus, it's an eco-friendly choice, crafted from sustainable materials to help maintain hygiene while preserving the planet.",
+                      "Our Container is not just for storing your meals; it's designed to last. Its sturdy construction ensures that your food remains fresh, safe, and secure. What's more, it's an eco-conscious choice, made from sustainable materials, so you can savor your meals knowing you're making a responsible choice for the environment",
+                      "Our Toothpicks are more than just handy tools; they're crafted to withstand the rigors of daily use. Their sturdiness makes them perfect for a variety of tasks. In addition to durability, they are made from sustainable materials, combining strength with eco-friendliness to meet your needs while caring for the planet.",
+                    ];
+
+                    final random = Random();
+                    int randomIndex = random.nextInt(desc.length);
+
+                    return CustomCard3(
+                      assetUrl: assetUrl,
+                      title: title,
+                      productType: type,
+                      productID: productID,
+                      description: desc[randomIndex],
+                    );
+                  },
+                ),
+
                 Container(
                   margin: const EdgeInsets.only(
-                    top: 30,
+                    top: 1,
                   ),
                   width: MediaQuery.of(context).size.width,
                   // color: Colors.green.shade50,

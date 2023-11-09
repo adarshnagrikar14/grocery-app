@@ -62,7 +62,7 @@ class _ShowProductAllState extends State<ShowProductAll2> {
     });
 
     final response = await http.get(
-      Uri.parse('https://assignme-work.000webhostapp.com/call.php'),
+      Uri.parse('https://assignme-work.000webhostapp.com/venus/call.php'),
     );
 
     if (response.statusCode == 200) {
@@ -87,7 +87,7 @@ class _ShowProductAllState extends State<ShowProductAll2> {
     });
 
     final response = await http.get(
-      Uri.parse('https://assignme-work.000webhostapp.com/call.php'),
+      Uri.parse('https://assignme-work.000webhostapp.com/venus/call.php'),
     );
 
     if (response.statusCode == 200) {
@@ -299,7 +299,7 @@ class _ShowProductAllState extends State<ShowProductAll2> {
                       final product = products[index];
                       final assetUrl = product['ImageLink'] ?? '';
                       final title = product['ProductName'] ?? '';
-                      final type = product['Type'] ?? '';
+                      final type = product['ProductType'] ?? '';
                       final productID = product['ProductId'] ?? "";
 
                       List<String> desc = [
@@ -315,7 +315,7 @@ class _ShowProductAllState extends State<ShowProductAll2> {
                       return CustomCard3(
                         assetUrl: assetUrl,
                         title: title,
-                        type: type,
+                        productType: type,
                         productID: productID,
                         description: desc[randomIndex],
                       );

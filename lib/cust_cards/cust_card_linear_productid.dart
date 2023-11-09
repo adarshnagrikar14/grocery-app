@@ -12,22 +12,27 @@ import 'package:whatsapp_share/whatsapp_share.dart';
 
 import 'dart:ui' as ui;
 
-class CustomCard3 extends StatelessWidget {
+class CustomCard3 extends StatefulWidget {
   final String assetUrl;
   final String title;
-  final String type;
   final String description;
   final String productID;
+  final String productType;
 
   const CustomCard3({
     required this.assetUrl,
     required this.title,
-    required this.type,
     required this.description,
     required this.productID,
+    required this.productType,
     Key? key,
   }) : super(key: key);
 
+  @override
+  State<CustomCard3> createState() => _CustomCard3State();
+}
+
+class _CustomCard3State extends State<CustomCard3> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -36,7 +41,7 @@ class CustomCard3 extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => DisplayItemPage(
-              productID: productID,
+              productID: widget.productID,
             ),
           ),
         );
@@ -57,17 +62,20 @@ class CustomCard3 extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(15.0),
-                child: Image.asset(
-                  assetUrl,
-                  width: MediaQuery.of(context).size.width,
-                  height: 200.0,
-                  fit: BoxFit.cover,
+                child: Hero(
+                  tag: "displayImage",
+                  child: Image.asset(
+                    widget.assetUrl,
+                    width: MediaQuery.of(context).size.width,
+                    height: 200.0,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  title,
+                  widget.title,
                   style: const TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.bold,
@@ -77,7 +85,7 @@ class CustomCard3 extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(left: 8.0),
                 child: Text(
-                  description,
+                  widget.description,
                   style: const TextStyle(
                     fontSize: 15.0,
                     color: Colors.black87,
@@ -103,7 +111,7 @@ class CustomCard3 extends StatelessWidget {
                     ),
                   ),
                   child: Text(
-                    type,
+                    widget.productType,
                     style: const TextStyle(
                       fontSize: 15.0,
                       // color: Colors.white,
@@ -115,8 +123,8 @@ class CustomCard3 extends StatelessWidget {
               InkWell(
                 onTap: () {
                   _shareOnWhatsApp(
-                    assetUrl,
-                    title,
+                    widget.assetUrl,
+                    widget.title,
                   );
                 },
                 child: const Padding(

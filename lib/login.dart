@@ -28,8 +28,9 @@ class _LoginScreenState extends State<LoginScreen> {
         accessToken: googleSignInAuthentication.accessToken,
       );
 
-      UserCredential result =
-          await _authFirebase.signInWithCredential(authCredential);
+      UserCredential result = await _authFirebase.signInWithCredential(
+        authCredential,
+      );
 
       if (result != null) {
         Fluttertoast.showToast(

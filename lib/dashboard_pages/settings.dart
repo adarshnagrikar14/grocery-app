@@ -1,6 +1,6 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 
-import 'package:demoapp/listitems/account.dart';
+import 'package:demoapp/settings_item/myaccount.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -47,28 +47,33 @@ class _SettingsPageState extends State<SettingsPage> {
               title: "My Account",
               subtitle: "See your profile",
               icon: Icons.account_circle_rounded,
-              destinationClass: (context) => const MyAccountPage(),
+              destinationClass: (context) => const MyAccount(),
             ),
             const Space(),
             MyListeItem(
               title: "My Addresses",
               subtitle: "See your added addresses",
               icon: Icons.location_on,
-              destinationClass: (context) => const MyAccountPage(),
+              destinationClass: (context) => const Center(),
             ),
             const Space(),
-            MyListeItem(
-              title: "Notification Settings",
-              subtitle: "Manage notification settings",
-              icon: Icons.notifications,
-              destinationClass: (context) => const MyAccountPage(),
+            GestureDetector(
+              onTap: () {},
+              child: MyListeItem(
+                title: "Notification Settings",
+                subtitle: "Manage notification settings",
+                icon: Icons.notifications,
+                destinationClass: (BuildContext context) {
+                  return const Center();
+                },
+              ),
             ),
             const Space(),
             MyListeItem(
               title: "Manage Permissions",
               subtitle: "Manage your all permissions",
               icon: Icons.manage_accounts_rounded,
-              destinationClass: (context) => const MyAccountPage(),
+              destinationClass: (context) => const Center(),
             ),
             const Space(),
             Padding(
@@ -178,9 +183,12 @@ class ProfileCard extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Row(
           children: [
-            CircleAvatar(
-              radius: 35.0,
-              backgroundImage: NetworkImage(imagePath),
+            Hero(
+              tag: "ProfileImage",
+              child: CircleAvatar(
+                radius: 35.0,
+                backgroundImage: NetworkImage(imagePath),
+              ),
             ),
             const SizedBox(width: 20.0),
             Expanded(

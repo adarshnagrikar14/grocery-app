@@ -37,6 +37,8 @@ class _DisplayItemPageState extends State<DisplayItemPage> {
   late String prodName;
   String prodDescription = "";
 
+  late List<String> filterValues;
+
   late bool _visible;
 
   List<String> desc = [
@@ -71,6 +73,9 @@ class _DisplayItemPageState extends State<DisplayItemPage> {
 
     imageUrl = "";
     prodName = "";
+
+    filterValues = [];
+
     _visible = false;
 
     randomIndex = random.nextInt(desc.length);
@@ -92,6 +97,8 @@ class _DisplayItemPageState extends State<DisplayItemPage> {
         imageUrl = data['ImageLink'];
         prodName = data['ProductName'];
         prodDescription = data['ProductDescription'];
+
+        filterValues = data['Filters'].split(', ');
       });
     } else {
       Fluttertoast.showToast(msg: "Failed to fetch product data.");
@@ -135,11 +142,14 @@ class _DisplayItemPageState extends State<DisplayItemPage> {
                       children: [
                         ClipRRect(
                           borderRadius: BorderRadius.circular(15.0),
-                          child: Image.asset(
-                            imageUrl,
-                            width: MediaQuery.of(context).size.width,
-                            fit: BoxFit.cover,
-                            height: MediaQuery.of(context).size.width,
+                          child: Hero(
+                            tag: "displayImage",
+                            child: Image.asset(
+                              imageUrl,
+                              width: MediaQuery.of(context).size.width,
+                              fit: BoxFit.cover,
+                              height: MediaQuery.of(context).size.width,
+                            ),
                           ),
                         ),
                         Padding(
@@ -316,6 +326,7 @@ class _DisplayItemPageState extends State<DisplayItemPage> {
                                   widget.productID,
                                 );
                               },
+                              sizeOptions: extractSizeValues(filterValues),
                             );
                           },
                         );
@@ -583,6 +594,20 @@ class _DisplayItemPageState extends State<DisplayItemPage> {
     );
   }
 
+  List<String> extractSizeValues(List<String> filterValues) {
+    List<String> sizeValues = [];
+
+    for (String filter in filterValues) {
+      if (filter.toLowerCase().contains("medium") ||
+          filter.toLowerCase().contains("small") ||
+          filter.toLowerCase().contains("large")) {
+        sizeValues.add(filter);
+      }
+    }
+
+    return sizeValues;
+  }
+
   Future<void> _shareOnWhatsApp() async {
     final ByteData byteData = await rootBundle.load(imageUrl);
     final Directory? directory1 = await getExternalStorageDirectory();
@@ -720,8 +745,11 @@ class _DisplayItemPageState extends State<DisplayItemPage> {
 class SizeFilter extends StatefulWidget {
   final Function(String) onFilterApplied;
 
+  final List<String> sizeOptions;
+
   const SizeFilter({
     required this.onFilterApplied,
+    required this.sizeOptions,
     Key? key,
   }) : super(key: key);
 
@@ -730,17 +758,15 @@ class SizeFilter extends StatefulWidget {
 }
 
 class _SizeFilterState extends State<SizeFilter> {
-  List<String> optionSize = [
-    "Small",
-    "Medium",
-    "Large",
-  ];
+  List<String> optionSize = [];
 
   List<String> selectedSize = [];
 
   @override
   void initState() {
     super.initState();
+
+    optionSize = widget.sizeOptions;
     selectedSize = [optionSize[0]];
   }
 
