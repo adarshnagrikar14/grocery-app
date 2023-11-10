@@ -4,7 +4,6 @@ import 'dart:math';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:chips_choice/chips_choice.dart';
 import 'package:demoapp/brands_cat/dinearth.dart';
-import 'package:demoapp/cust_cards/cust_card_linear_productid.dart';
 import 'package:demoapp/cust_cards/cust_card_row.dart';
 import 'package:demoapp/dashboard_pages/search.dart';
 import 'package:demoapp/display/display_items.dart';
@@ -16,6 +15,8 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import 'package:demoapp/cust_cards/cust_card_linear_mainpage.dart';
 
 import 'package:http/http.dart' as http;
 
@@ -918,7 +919,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     final random = Random();
                     int randomIndex = random.nextInt(desc.length);
 
-                    return CustomCard3(
+                    return CustomCardMain(
                       assetUrl: assetUrl,
                       title: title,
                       productType: type,

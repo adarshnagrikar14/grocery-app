@@ -1,6 +1,8 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 
+import 'package:app_settings/app_settings.dart';
 import 'package:demoapp/settings_item/myaccount.dart';
+import 'package:demoapp/settings_item/myaddresses.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -43,37 +45,50 @@ class _SettingsPageState extends State<SettingsPage> {
               imagePath: _profile,
             ),
             const Space(),
-            MyListeItem(
+            MyListItem(
               title: "My Account",
               subtitle: "See your profile",
               icon: Icons.account_circle_rounded,
-              destinationClass: (context) => const MyAccount(),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const MyAccount(),
+                  ),
+                );
+              },
             ),
             const Space(),
-            MyListeItem(
+            MyListItem(
               title: "My Addresses",
               subtitle: "See your added addresses",
               icon: Icons.location_on,
-              destinationClass: (context) => const Center(),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const MyAddresses(),
+                  ),
+                );
+              },
             ),
             const Space(),
-            GestureDetector(
-              onTap: () {},
-              child: MyListeItem(
-                title: "Notification Settings",
-                subtitle: "Manage notification settings",
-                icon: Icons.notifications,
-                destinationClass: (BuildContext context) {
-                  return const Center();
-                },
+            MyListItem(
+              title: "Notification Settings",
+              subtitle: "Manage notification settings",
+              icon: Icons.notifications,
+              onTap: () => AppSettings.openAppSettings(
+                type: AppSettingsType.notification,
               ),
             ),
             const Space(),
-            MyListeItem(
+            MyListItem(
               title: "Manage Permissions",
               subtitle: "Manage your all permissions",
               icon: Icons.manage_accounts_rounded,
-              destinationClass: (context) => const Center(),
+              onTap: () => AppSettings.openAppSettings(
+                type: AppSettingsType.settings,
+              ),
             ),
             const Space(),
             Padding(
@@ -113,34 +128,26 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 }
 
-class MyListeItem extends StatelessWidget {
+class MyListItem extends StatelessWidget {
   final String title;
   final String subtitle;
   final IconData icon;
+  final VoidCallback? onTap;
 
-  final Widget Function(BuildContext context)? destinationClass;
-
-  const MyListeItem({
-    super.key,
+  const MyListItem({
+    Key? key,
     required this.title,
     required this.subtitle,
     required this.icon,
-    required this.destinationClass,
-  });
+    this.onTap,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 8.0),
       child: InkWell(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => destinationClass!(context),
-            ),
-          );
-        },
+        onTap: onTap,
         child: ListTile(
           leading: Icon(
             icon,
