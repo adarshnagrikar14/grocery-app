@@ -1,6 +1,7 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 
 import 'package:app_settings/app_settings.dart';
+import 'package:demoapp/add_items/additems.dart';
 import 'package:demoapp/settings_item/myaccount.dart';
 import 'package:demoapp/settings_item/myaddresses.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -91,6 +92,20 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ),
             const Space(),
+            MyListItem(
+              title: "Add Item",
+              subtitle: "Add items (Beta)",
+              icon: Icons.add,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const AddItems(),
+                  ),
+                );
+              },
+            ),
+            const Space(),
             Padding(
               padding: const EdgeInsets.only(
                 top: 28.0,
@@ -121,6 +136,9 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ),
             ),
+            const SizedBox(
+              height: 100.0,
+            )
           ],
         ),
       ),
