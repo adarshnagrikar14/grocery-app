@@ -1,29 +1,20 @@
 // ignore_for_file: use_build_context_synchronously, library_private_types_in_public_api, avoid_print
 
-import 'dart:async';
-import 'dart:io';
-import 'dart:math';
-
-import 'package:chips_choice/chips_choice.dart';
-import 'package:demoapp/wishlist/wishlist_af.dart';
-import 'dart:ui' as ui;
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:whatsapp_share/whatsapp_share.dart';
 
 class DisplayItemPage extends StatefulWidget {
   final String imageUrl;
   final String productName;
+  final String desc;
 
   const DisplayItemPage({
     super.key,
     required this.imageUrl,
     required this.productName,
+    required this.desc,
   });
 
   @override
@@ -35,35 +26,13 @@ class _DisplayItemPageState extends State<DisplayItemPage> {
   String prodName = "";
   String prodDescription = "";
 
-  List<String> selectedItems = [];
-
-  List<String> options = [
-    "Affordable",
-    "Multicolor",
-    "Small Size",
-    "Easy to use",
-  ];
-
-  List<String> desc = [
-    "Our Plate Cardboard is more than just a serving solution; it's your sustainable partner. Crafted from durable materials, it's designed to withstand the weight of your favorite dishes while being environmentally conscious. Choose it for a guilt-free dining experience that's both robust and eco-friendly.",
-    "Our Tissue General offers the perfect blend of resilience and responsibility. With excellent absorbency and strength, it tackles spills and messes effectively. Plus, it's an eco-friendly choice, crafted from sustainable materials to help maintain hygiene while preserving the planet.",
-    "Our Container is not just for storing your meals; it's designed to last. Its sturdy construction ensures that your food remains fresh, safe, and secure. What's more, it's an eco-conscious choice, made from sustainable materials, so you can savor your meals knowing you're making a responsible choice for the environment",
-    "Our Toothpicks are more than just handy tools; they're crafted to withstand the rigors of daily use. Their sturdiness makes them perfect for a variety of tasks. In addition to durability, they are made from sustainable materials, combining strength with eco-friendliness to meet your needs while caring for the planet.",
-  ];
-
-  final random = Random();
-  int randomIndex = 0;
-
   @override
   void initState() {
     super.initState();
 
-    randomIndex = random.nextInt(desc.length);
-
     imageUrl = widget.imageUrl;
     prodName = widget.productName;
-    prodDescription = desc[randomIndex];
-    selectedItems = [options[0]];
+    prodDescription = widget.desc;
   }
 
   @override
@@ -95,7 +64,7 @@ class _DisplayItemPageState extends State<DisplayItemPage> {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(15.0),
-                    child: Image.asset(
+                    child: Image.network(
                       imageUrl,
                       width: MediaQuery.of(context).size.width,
                       fit: BoxFit.cover,
@@ -121,7 +90,7 @@ class _DisplayItemPageState extends State<DisplayItemPage> {
                       left: 3,
                     ),
                     child: Text(
-                      desc[randomIndex],
+                      prodDescription,
                       style: TextStyle(
                         fontSize: 15.0,
                         color: Colors.grey.shade600,
@@ -160,25 +129,16 @@ class _DisplayItemPageState extends State<DisplayItemPage> {
                   ),
                   RoundedBorderButton(
                     onTap: () {
-                      // addToWishlist();
                       showModalBottomSheet(
                         context: context,
                         builder: (BuildContext context) {
                           return SizeFilter(
-                            onFilterApplied: (sizeSelected) {
-                              addToWishlist(sizeSelected, desc[randomIndex]);
-                            },
+                            onFilterApplied: (sizeSelected) {},
                           );
                         },
                       );
                     },
                     text: "Add to Wishlist",
-                  ),
-                  RoundedBorderButtonGreen(
-                    onTap: () {
-                      _shareOnWhatsApp();
-                    },
-                    text: "Whatsapp Share",
                   ),
                   Padding(
                     padding: const EdgeInsets.only(
@@ -196,7 +156,7 @@ class _DisplayItemPageState extends State<DisplayItemPage> {
                       left: 3,
                     ),
                     child: Text(
-                      "Fetures of the product",
+                      "Features of the product",
                       style: TextStyle(
                         fontSize: 15.0,
                         color: Colors.black,
@@ -328,137 +288,6 @@ class _DisplayItemPageState extends State<DisplayItemPage> {
       ),
     );
   }
-
-  Future<void> _shareOnWhatsApp() async {
-    final ByteData byteData = await rootBundle.load(widget.imageUrl);
-    final Directory? directory1 = await getExternalStorageDirectory();
-
-    final List<int> imageData = byteData.buffer.asUint8List();
-    final textImage = await textToImage(widget.productName);
-
-    if (directory1 != null) {
-      final File file2 = File('${directory1.path}/shareable_text.jpg');
-      final File file1 = File('${directory1.path}/shareable.jpg');
-
-      try {
-        await file1.writeAsBytes(imageData);
-        await file2.writeAsBytes(textImage);
-
-        await WhatsappShare.shareFile(
-          phone: '919168202971',
-          filePath: [
-            file1.path,
-            file2.path,
-          ],
-        );
-      } catch (e) {
-        print('Error: $e');
-      }
-    } else {
-      print("Ext storage dir. is null");
-    }
-  }
-
-  Future<Uint8List> textToImage(String text) async {
-    final recorder = ui.PictureRecorder();
-    final canvas = Canvas(
-      recorder,
-      Rect.fromPoints(
-        const Offset(0, 0),
-        const Offset(400, 100),
-      ),
-    );
-
-    final textPainter = TextPainter(
-      textAlign: TextAlign.center,
-      text: TextSpan(
-        text: text,
-        style: const TextStyle(
-          color: Colors.black,
-          fontSize: 20.0,
-        ),
-      ),
-      textDirection: TextDirection.ltr,
-    );
-
-    textPainter.layout(minWidth: 400, maxWidth: 400);
-
-    canvas.drawColor(
-      Colors.white,
-      BlendMode.color,
-    );
-
-    final offsetX = (400 - textPainter.width) / 2;
-    final offsetY = (100 - textPainter.height) / 2;
-    final textOffset = Offset(offsetX, offsetY);
-
-    textPainter.paint(
-      canvas,
-      textOffset,
-    );
-
-    final picture = recorder.endRecording();
-    final img = await picture.toImage(400, 100);
-    final imgByteData = await img.toByteData(format: ui.ImageByteFormat.png);
-
-    return imgByteData!.buffer.asUint8List();
-  }
-
-  void addToWishlist(String prodSize, String prodDesc) async {
-    _showCustomProgressDialog(context);
-
-    String result = await saveItemToDB(
-      imageUrl,
-      prodName,
-      prodSize,
-      prodDesc,
-      "1",
-    );
-
-    // dis dialog
-    Navigator.of(context).pop();
-
-    if (result == "Success") {
-      Fluttertoast.showToast(msg: "Item Added to wishlist");
-    } else {
-      Fluttertoast.showToast(msg: "Retry Adding Item.");
-    }
-  }
-
-  void _showCustomProgressDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        return Dialog(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          child: Container(
-            width: 100,
-            height: 100,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12.0),
-            ),
-            child: const Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircularProgressIndicator(
-                    color: Colors.green,
-                  ),
-                  SizedBox(
-                    height: 12.0,
-                  ),
-                  Text("Adding to wishlist..."),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
 }
 
 class SizeFilter extends StatefulWidget {
@@ -474,24 +303,17 @@ class SizeFilter extends StatefulWidget {
 }
 
 class _SizeFilterState extends State<SizeFilter> {
-  List<String> optionSize = [
-    "Small",
-    "Medium",
-    "Large",
-  ];
-
   List<String> selectedSize = [];
 
   @override
   void initState() {
     super.initState();
-    selectedSize = [optionSize[0]];
   }
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 300.0,
+      height: 250.0,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -519,7 +341,7 @@ class _SizeFilterState extends State<SizeFilter> {
                 left: 3.0,
               ),
               child: ListTile(
-                title: const Text("Add required Size"),
+                title: const Text("Add To Wishlist?"),
                 trailing: IconButton(
                   icon: const Icon(
                     Icons.close,
@@ -532,7 +354,7 @@ class _SizeFilterState extends State<SizeFilter> {
             ),
           ),
           Expanded(
-            flex: 4,
+            flex: 3,
             child: SizedBox(
               child: SingleChildScrollView(
                 child: Padding(
@@ -553,33 +375,12 @@ class _SizeFilterState extends State<SizeFilter> {
                       const Padding(
                         padding: EdgeInsets.only(top: 10.0),
                         child: Text(
-                          "Size",
+                          "You Can see items added in wishlist in the menu option given below.",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 15.0,
                             color: Colors.black,
                           ),
-                        ),
-                      ),
-                      ChipsChoice<String>.single(
-                        value: selectedSize.isNotEmpty ? selectedSize[0] : null,
-                        onChanged: (val) {
-                          setState(() {
-                            selectedSize = [val];
-                          });
-                        },
-                        choiceStyle: C2ChipStyle.filled(
-                          color: Colors.white,
-                          checkmarkColor: Colors.green.shade900,
-                          selectedStyle: C2ChipStyle.filled(
-                            color: Colors.green.shade100,
-                          ),
-                        ),
-                        choiceCheckmark: true,
-                        choiceItems: C2Choice.listFrom<String, String>(
-                          source: optionSize,
-                          value: (i, v) => v,
-                          label: (i, v) => v,
                         ),
                       ),
                     ],
@@ -602,6 +403,7 @@ class _SizeFilterState extends State<SizeFilter> {
                 width: MediaQuery.of(context).size.width,
                 child: OutlinedButton(
                   onPressed: () {
+                    Fluttertoast.showToast(msg: "Added to Wishlist");
                     applyFilter();
                   },
                   style: OutlinedButton.styleFrom(

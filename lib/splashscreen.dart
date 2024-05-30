@@ -75,29 +75,6 @@ class _SplashScreenState extends State<SplashScreen>
               ),
             ),
           ),
-          Expanded(
-            flex: 1,
-            child: Container(
-              height: 50.0,
-              alignment: Alignment.bottomCenter,
-              padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 10.0),
-              child: const Text(
-                "Welcome to",
-                style: TextStyle(
-                  fontSize: 18.0,
-                ),
-              ),
-            ),
-          ),
-          Expanded(
-            flex: 1,
-            child: Container(
-              height: 50.0,
-              alignment: Alignment.bottomCenter,
-              padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 20.0),
-              child: Image.asset("assets/images/logo.jpg"),
-            ),
-          ),
         ],
       ),
     );

@@ -1,7 +1,6 @@
 // ignore_for_file: avoid_print, use_build_context_synchronously
 
 import 'dart:async';
-import 'dart:io';
 import 'dart:math';
 
 import 'package:demoapp/display/display_items.dart';
@@ -9,20 +8,20 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:whatsapp_share/whatsapp_share.dart';
 
 import 'dart:ui' as ui;
 
 class CustomCardRow extends StatefulWidget {
   final String assetUrl;
   final String title;
+  final String desc;
 
   const CustomCardRow({
     required this.assetUrl,
     required this.title,
     Key? key,
+    required this.desc,
   }) : super(key: key);
 
   @override
@@ -30,20 +29,12 @@ class CustomCardRow extends StatefulWidget {
 }
 
 class _CustomCardRowState extends State<CustomCardRow> {
-  List<String> desc = [
-    "Our Plate Cardboard is more than just a serving solution; it's your sustainable partner. Crafted from durable materials, it's designed to withstand the weight of your favorite dishes while being environmentally conscious. Choose it for a guilt-free dining experience that's both robust and eco-friendly.",
-    "Our Tissue General offers the perfect blend of resilience and responsibility. With excellent absorbency and strength, it tackles spills and messes effectively. Plus, it's an eco-friendly choice, crafted from sustainable materials to help maintain hygiene while preserving the planet.",
-    "Our Container is not just for storing your meals; it's designed to last. Its sturdy construction ensures that your food remains fresh, safe, and secure. What's more, it's an eco-conscious choice, made from sustainable materials, so you can savor your meals knowing you're making a responsible choice for the environment",
-    "Our Toothpicks are more than just handy tools; they're crafted to withstand the rigors of daily use. Their sturdiness makes them perfect for a variety of tasks. In addition to durability, they are made from sustainable materials, combining strength with eco-friendliness to meet your needs while caring for the planet.",
-  ];
-
   final random = Random();
   int randomIndex = 0;
 
   @override
   void initState() {
     super.initState();
-    randomIndex = random.nextInt(desc.length);
   }
 
   @override
@@ -58,6 +49,7 @@ class _CustomCardRowState extends State<CustomCardRow> {
               builder: (context) => DisplayItemPage(
                 imageUrl: widget.assetUrl,
                 productName: widget.title,
+                desc: widget.desc,
               ),
             ),
           );
@@ -81,10 +73,10 @@ class _CustomCardRowState extends State<CustomCardRow> {
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(15.0),
-                      child: Image.asset(
+                      child: Image.network(
                         widget.assetUrl,
                         width: MediaQuery.of(context).size.width,
-                        fit: BoxFit.cover,
+                        fit: BoxFit.fitWidth,
                         height: 160.0,
                       ),
                     ),
@@ -102,7 +94,7 @@ class _CustomCardRowState extends State<CustomCardRow> {
                     Padding(
                       padding: const EdgeInsets.only(left: 8.0),
                       child: Text(
-                        desc[randomIndex],
+                        widget.desc,
                         style: const TextStyle(
                           fontSize: 13.0,
                           color: Colors.black87,
@@ -110,27 +102,6 @@ class _CustomCardRowState extends State<CustomCardRow> {
                         ),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        _shareOnWhatsApp();
-                      },
-                      child: const Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text("Share it"),
-                            SizedBox(
-                              width: 20.0,
-                            ),
-                            Icon(
-                              Icons.send_rounded,
-                              size: 20.0,
-                            ),
-                          ],
-                        ),
                       ),
                     ),
                   ],
@@ -149,7 +120,7 @@ class _CustomCardRowState extends State<CustomCardRow> {
                         builder: (BuildContext context) {
                           return SizeFilter(
                             onFilterApplied: (sizeSelected) {
-                              addToWishlist(sizeSelected, context);
+                              Fluttertoast.showToast(msg: "Added");
                             },
                           );
                         },
@@ -176,11 +147,6 @@ class _CustomCardRowState extends State<CustomCardRow> {
         ),
       ),
     );
-  }
-
-  void addToWishlist(String string, BuildContext context) async {
-    await saveToSharedPreferences(
-        widget.assetUrl, widget.title, string, context);
   }
 
   Future<void> saveToSharedPreferences(String imageUrl, String title,
@@ -267,48 +233,6 @@ class _CustomCardRowState extends State<CustomCardRow> {
         );
       },
     );
-  }
-
-  Future<void> _shareOnWhatsApp() async {
-    final ByteData byteData = await rootBundle.load(widget.assetUrl);
-    final Directory? directory1 = await getExternalStorageDirectory();
-
-    final List<int> imageData = byteData.buffer.asUint8List();
-    final textImage = await textToImage(widget.title);
-
-    if (directory1 != null) {
-      final File file2 = File('${directory1.path}/shareable_text.jpg');
-      final File file1 = File('${directory1.path}/shareable.jpg');
-
-      try {
-        await file1.writeAsBytes(imageData);
-        await file2.writeAsBytes(textImage);
-
-        Package package;
-
-        bool? isBusinessWhatsappInstalled =
-            await WhatsappShare.isInstalled(package: Package.businessWhatsapp);
-
-        if (isBusinessWhatsappInstalled == true) {
-          package = Package.businessWhatsapp;
-        } else {
-          package = Package.whatsapp;
-        }
-
-        await WhatsappShare.shareFile(
-          package: package,
-          phone: '919168202971',
-          filePath: [
-            file1.path,
-            file2.path,
-          ],
-        );
-      } catch (e) {
-        print('Error: $e');
-      }
-    } else {
-      print("Ext storage dir. is null");
-    }
   }
 
   Future<Uint8List> textToImage(String text) async {

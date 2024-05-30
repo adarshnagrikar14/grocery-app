@@ -36,6 +36,7 @@ class CustomCard3 extends StatelessWidget {
             builder: (context) => DisplayItemPage(
               imageUrl: assetUrl,
               productName: title,
+              desc: "Description",
             ),
           ),
         );

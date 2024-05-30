@@ -91,7 +91,7 @@ class _WalkThroughState extends State<WalkThrough> {
         ),
         child: ElevatedButton(
           style: ButtonStyle(
-            backgroundColor: MaterialStatePropertyAll(Colors.green.shade300),
+            backgroundColor: WidgetStatePropertyAll(Colors.green.shade300),
           ),
           onPressed: _nextPage,
           child: Text(

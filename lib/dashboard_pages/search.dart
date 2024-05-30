@@ -39,7 +39,7 @@ class _SearchPageState extends State<SearchPage> {
     });
   }
 
-  final List<String> crockeryList = [
+  final List<String> groceryList = [
     'Plates',
     'Tissues',
     'Container',
@@ -71,7 +71,7 @@ class _SearchPageState extends State<SearchPage> {
       return;
     }
 
-    final List<String> results = crockeryList
+    final List<String> results = groceryList
         .where((item) => item.toLowerCase().contains(query.toLowerCase()))
         .toList();
 
@@ -115,7 +115,7 @@ class _SearchPageState extends State<SearchPage> {
                   search(text);
                 },
                 decoration: InputDecoration(
-                  hintText: 'Search Crockery',
+                  hintText: 'Search grocery',
                   prefixIcon: const Icon(Icons.search),
                   suffixIcon: IconButton(
                     icon: const Icon(Icons.clear),
@@ -168,6 +168,7 @@ class _SearchPageState extends State<SearchPage> {
                             builder: (context) => DisplayItemPage(
                               imageUrl: "assets/images/tissue2.jpg",
                               productName: searchResults[index],
+                              desc: "Description",
                             ),
                           ),
                         );

@@ -1,24 +1,18 @@
-import 'dart:convert';
 import 'dart:math';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:chips_choice/chips_choice.dart';
-import 'package:demoapp/brands_cat/dinearth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:demoapp/cust_cards/cust_card_row.dart';
 import 'package:demoapp/dashboard_pages/search.dart';
 import 'package:demoapp/display/display_items.dart';
-import 'package:demoapp/brands_cat/more_brands.dart';
 import 'package:demoapp/types/plates.dart';
 import 'package:demoapp/types/container.dart';
 import 'package:demoapp/types/tissues.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import 'package:demoapp/cust_cards/cust_card_linear_mainpage.dart';
-
-import 'package:http/http.dart' as http;
 
 import '../show_more/show_more_af_2.dart';
 
@@ -42,8 +36,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     selectedImageCarousel = 0;
     selectedItems = [options[0]];
-
-    fetchProducts();
   }
 
   List<String> options = [
@@ -54,29 +46,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
   ];
 
   List<String> imageUrls = [
-    "https://img.freepik.com/free-photo/top-view-delicious-squash-meal-with-fresh-red-dogwoods-tomatoes-grey-surface_140725-90400.jpg?size=626&ext=jpg&uid=R39764193&ga=GA1.2.934500188.1688583517&semt=sph",
-    "https://img.freepik.com/free-photo/flat-lay-organic-vegetables-with-plate-cutlery_23-2148853372.jpg?w=1060&t=st=1696751314~exp=1696751914~hmac=0b14979fcc37b56fbc68a0be107a2e606b0cf2fe9ff89c7865e24d57e68f070a",
-    "https://img.freepik.com/free-photo/top-view-table-arrangement-with-empty-dishes-tableware_23-2150310715.jpg?t=st=1696751332~exp=1696754932~hmac=9c00c291ce02f3620173807b03450408387ade102d765b3695f6170ebbe8d536&w=1060",
-    "https://img.freepik.com/free-photo/top-view-brown-wooden-desk_140725-79653.jpg?w=1060&t=st=1696751464~exp=1696752064~hmac=190167f612d985d4c29a36752626f8026be96a21510dfbbc3238b00d5f6984fd"
+    "https://img.freepik.com/free-vector/flat-design-food-sale-background_23-2149219274.jpg?t=st=1717073699~exp=1717077299~hmac=153bd6bb5225d93c2c8ae2c0e1945fdecef53d8d1dafd242f1c0e9cf6485ac03&w=1380",
+    "https://img.freepik.com/free-vector/flat-design-food-facebook-ad_23-2149219269.jpg?t=st=1717073757~exp=1717077357~hmac=370c8a6ab0b2f1f13ef290c53fd06d1c888a52c712a73ed371598f6bea8d1170&w=1060",
+    "https://img.freepik.com/free-vector/hand-drawn-supermarket-facebook-cover_23-2150389222.jpg?t=st=1717073849~exp=1717077449~hmac=5c1b73382e1e719f30b0542e06e8ae6027198bc146f915a6a12933bcc0f3135a&w=1380",
+    "https://img.freepik.com/free-psd/flat-design-natural-market-facebook-template_23-2149701901.jpg?t=st=1717073871~exp=1717077471~hmac=1c168e1319f1810bc0c0cd4825d1476c4472cd31a094864c337674da3268adb3&w=1380"
   ];
-
-  Future<void> fetchProducts() async {
-    final response = await http.get(
-      Uri.parse('https://assignme-work.000webhostapp.com/venus/call.php'),
-    );
-
-    if (response.statusCode == 200) {
-      final List<dynamic> data = json.decode(response.body);
-
-      setState(
-        () {
-          products = List<Map<String, dynamic>>.from(data).take(5).toList();
-        },
-      );
-    } else {
-      Fluttertoast.showToast(msg: "Error Occurred.");
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -182,7 +156,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     borderRadius: BorderRadius.circular(15.0),
                                     child: Image.network(
                                       imageUrl,
-                                      fit: BoxFit.cover,
+                                      fit: BoxFit.fill,
                                     ),
                                   ),
                                 );
@@ -221,7 +195,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
 
                 // categories
-                // items
                 Container(
                   // color: Colors.grey,
                   decoration: BoxDecoration(
@@ -261,7 +234,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               Column(
                                 children: [
                                   RoundedImage(
-                                    imageUrl: "assets/images/plate.png",
+                                    imageUrl: "assets/images/oil.jpg",
                                     onTap: () {
                                       Navigator.push(
                                         context,
@@ -292,7 +265,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               Column(
                                 children: [
                                   RoundedImage(
-                                    imageUrl: "assets/images/tissues.png",
+                                    imageUrl: "assets/images/oil.jpg",
                                     onTap: () {
                                       Navigator.push(
                                         context,
@@ -323,7 +296,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               Column(
                                 children: [
                                   RoundedImage(
-                                    imageUrl: "assets/images/containers.png",
+                                    imageUrl: "assets/images/oil.jpg",
                                     onTap: () {
                                       Navigator.push(
                                         context,
@@ -360,7 +333,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               Column(
                                 children: [
                                   RoundedImage(
-                                    imageUrl: "assets/images/toothpicks.png",
+                                    imageUrl: "assets/images/oil.jpg",
                                     onTap: () {
                                       Navigator.push(
                                         context,
@@ -399,7 +372,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 child: Column(
                                   children: [
                                     RoundedImage(
-                                      imageUrl: "assets/images/cuttlery.png",
+                                      imageUrl: "assets/images/oil.jpg",
                                       onTap: () {
                                         Navigator.push(
                                           context,
@@ -442,147 +415,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                 ),
 
-                // brand categories
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  // color: Colors.grey,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(
-                      12.0,
-                    ),
-                    color: Colors.green.shade100,
-                  ),
-                  margin: const EdgeInsets.only(
-                    left: 18.0,
-                    right: 18.0,
-                    top: 22.0,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          top: 8.0,
-                          left: 10.0,
-                        ),
-                        child: Text(
-                          "Brand Categories",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18.0,
-                            fontFamily: GoogleFonts.tiltNeon().fontFamily,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 0.0, bottom: 10.0),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Container(
-                                margin: const EdgeInsets.only(
-                                  top: 20.0,
-                                  bottom: 15.0,
-                                  left: 10.0,
-                                ),
-                                padding: const EdgeInsets.all(8.0),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(
-                                    10.0,
-                                  ),
-                                  color: Colors.black26,
-                                ),
-                                width: 110.0,
-                                height: 55.0,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            const DineEarthPage(),
-                                      ),
-                                    );
-                                  },
-                                  child: Image.asset(
-                                    'assets/images/dinearth.webp',
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: Container(
-                                margin: const EdgeInsets.only(
-                                  top: 20.0,
-                                  bottom: 15.0,
-                                  left: 15.0,
-                                ),
-                                padding: const EdgeInsets.all(8.0),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(
-                                    10.0,
-                                  ),
-                                  color: Colors.black26,
-                                ),
-                                width: 110.0,
-                                height: 55.0,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Fluttertoast.showToast(
-                                      msg: "Under development",
-                                    );
-                                  },
-                                  child: Image.asset(
-                                    'assets/images/pmahal.png',
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: Container(
-                                margin: const EdgeInsets.only(
-                                  top: 20.0,
-                                  bottom: 15.0,
-                                  left: 15.0,
-                                  right: 15.0,
-                                ),
-                                padding: const EdgeInsets.all(8.0),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(
-                                    10.0,
-                                  ),
-                                  color: Colors.white30,
-                                ),
-                                width: 110.0,
-                                height: 55.0,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            const MoreBrandsPage(),
-                                      ),
-                                    );
-                                  },
-                                  child: const Center(
-                                    child: Text(
-                                      "See All",
-                                      style: TextStyle(
-                                        fontSize: 17.0,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
                 // title 2
                 const Space(
                   top: 22,
@@ -616,31 +448,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     borderRadius: BorderRadius.circular(
                       12.0,
                     ),
-                    // color: Colors.green.shade100,
                   ),
-                  child: const SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        CustomCardRow(
-                          assetUrl: "assets/images/raw1.jpg",
-                          title: "Product 1: plate cardboard",
-                        ),
-                        CustomCardRow(
-                          assetUrl: "assets/images/raw2.jpg",
-                          title: "Product 2: plate cardboard",
-                        ),
-                        CustomCardRow(
-                          assetUrl: "assets/images/tissue4.jpg",
-                          title: "Product 3: Tissue General",
-                        ),
-                        CustomCardRow(
-                          assetUrl: "assets/images/tissue3.jpg",
-                          title: "Product 4: Tissue General",
-                        ),
-                      ],
-                    ),
-                  ),
+                  child: const FeaturedItems(),
                 ),
 
                 // show more : featured
@@ -650,7 +459,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => const ShowProductAll2(),
-                        // builder: (context) => const ShowProductAll(),
                       ),
                     );
                   },
@@ -733,33 +541,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     borderRadius: BorderRadius.circular(
                       12.0,
                     ),
-                    // color: Colors.amber.shade300,
                   ),
-                  child: SingleChildScrollView(
+                  child: const SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
-                      children: [
-                        CustomCardRow(
-                          assetUrl: "assets/images/cont1.jpg",
-                          title:
-                              "${selectedItems.isNotEmpty ? selectedItems[0] : "None"} 1: Product",
-                        ),
-                        CustomCardRow(
-                          assetUrl: "assets/images/raw4.jpg",
-                          title:
-                              "${selectedItems.isNotEmpty ? selectedItems[0] : "None"} 2: Product",
-                        ),
-                        CustomCardRow(
-                          assetUrl: "assets/images/raw3.jpg",
-                          title:
-                              "${selectedItems.isNotEmpty ? selectedItems[0] : "None"} 3: Product",
-                        ),
-                        CustomCardRow(
-                          assetUrl: "assets/images/tissue2.jpg",
-                          title:
-                              "${selectedItems.isNotEmpty ? selectedItems[0] : "None"} 4: Product",
-                        ),
-                      ],
+                      children: [],
                     ),
                   ),
                 ),
@@ -829,22 +615,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     scrollDirection: Axis.horizontal,
                     child: Row(
                       children: [
-                        CustomCardRow(
-                          assetUrl: "assets/images/cont4.jpg",
-                          title: "Innovation 1: Product",
-                        ),
-                        CustomCardRow(
-                          assetUrl: "assets/images/cont2.jpg",
-                          title: "Innovation 2: Product",
-                        ),
-                        CustomCardRow(
-                          assetUrl: "assets/images/tissue1.jpg",
-                          title: "Innovation 3: Product",
-                        ),
-                        CustomCardRow(
-                          assetUrl: "assets/images/raw2.jpg",
-                          title: "Innovation 4: Product",
-                        ),
+                        // CustomCardRow(
+                        //   assetUrl: "assets/images/cont4.jpg",
+                        //   title: "Innovation 1: Product",
+                        // ),
+                        // CustomCardRow(
+                        //   assetUrl: "assets/images/cont2.jpg",
+                        //   title: "Innovation 2: Product",
+                        // ),
+                        // CustomCardRow(
+                        //   assetUrl: "assets/images/tissue1.jpg",
+                        //   title: "Innovation 3: Product",
+                        // ),
+                        // CustomCardRow(
+                        //   assetUrl: "assets/images/raw2.jpg",
+                        //   title: "Innovation 4: Product",
+                        // ),
                       ],
                     ),
                   ),
@@ -928,91 +714,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     );
                   },
                 ),
-
-                Container(
-                  margin: const EdgeInsets.only(
-                    top: 1,
-                  ),
-                  width: MediaQuery.of(context).size.width,
-                  // color: Colors.green.shade50,
-                  height: 380.0,
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Stack(
-                      children: [
-                        const SizedBox(
-                          height: 380.0,
-                          child: Image(
-                            image: AssetImage(
-                              "assets/images/liveitup.jpg",
-                            ),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 30.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Live\nit up!",
-                                style: TextStyle(
-                                  fontSize: 80.0,
-                                  fontWeight: FontWeight.w900,
-                                  color: Colors.grey.shade700,
-                                  height: 1.2,
-                                ),
-                                textAlign: TextAlign.start,
-                              ),
-                              const Text(
-                                "\nCrafted especially for your Convenience",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.black54,
-                                  height: 1.2,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 70.0,
-                )
-              ],
-            ),
-          ),
-          Positioned(
-            bottom: 100.0,
-            right: 20.0,
-            child: Column(
-              children: [
-                FloatingActionButton(
-                  onPressed: () async {
-                    if (!await launchUrl(Uri.parse("tel:9168202971"))) {
-                      throw Exception('Could not launch');
-                    }
-                  },
-                  backgroundColor: Colors.green.shade50,
-                  child: const Icon(Icons.call),
-                ),
-                const SizedBox(
-                  height: 20.0,
-                ),
-                FloatingActionButton(
-                  onPressed: () {
-                    _launchUrl();
-                  },
-                  backgroundColor: Colors.green.shade50,
-                  child: Image.asset(
-                    "assets/images/what.png",
-                    width: 30.0,
-                  ),
-                ),
               ],
             ),
           ),
@@ -1020,11 +721,47 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
     );
   }
+}
 
-  Future<void> _launchUrl() async {
-    if (!await launchUrl(Uri.parse("https://wa.me/919168202971"))) {
-      throw Exception('Could not launch');
-    }
+class FeaturedItems extends StatelessWidget {
+  const FeaturedItems({Key? key}) : super(key: key);
+
+  Future<List<Map<String, dynamic>>> fetchFeaturedItems() async {
+    QuerySnapshot querySnapshot =
+        await FirebaseFirestore.instance.collection('Featured').get();
+    return querySnapshot.docs
+        .map((doc) => doc.data() as Map<String, dynamic>)
+        .toList();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<List<Map<String, dynamic>>>(
+      future: fetchFeaturedItems(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return const Center(child: Text('No items found.'));
+        } else {
+          final items = snapshot.data!;
+          return SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: items.map((item) {
+                return CustomCardRow(
+                  assetUrl: item['Url'],
+                  title: item['Title'],
+                  desc: item["Description"],
+                );
+              }).toList(),
+            ),
+          );
+        }
+      },
+    );
   }
 }
 
@@ -1090,6 +827,7 @@ class CustomCard extends StatelessWidget {
               builder: (context) => DisplayItemPage(
                 imageUrl: assetUrl,
                 productName: title,
+                desc: "Description",
               ),
             ),
           );
@@ -1177,7 +915,7 @@ class RoundedImage extends StatelessWidget {
               shape: BoxShape.circle,
               border: Border.all(
                 width: 1.2,
-                color: Colors.black,
+                color: Colors.white,
               ),
               color: Colors.grey.shade100,
             ),

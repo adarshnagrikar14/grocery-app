@@ -1,6 +1,6 @@
 // ignore_for_file: use_build_context_synchronously, unnecessary_null_comparison
 
-import 'package:demoapp/walkthrough.dart';
+import 'package:demoapp/mainpage/mainscreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -45,7 +45,7 @@ class _LoginScreenState extends State<LoginScreen> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => const WalkThrough(),
+            builder: (context) => const MainScreen(),
           ),
         );
       } else {
@@ -79,15 +79,10 @@ class _LoginScreenState extends State<LoginScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text(
-                  "Welcome to",
+                  "Welcome to Grocery App",
                   style: TextStyle(
                     fontSize: 17.0,
                   ),
-                ),
-                Container(
-                  height: 80.0,
-                  padding: const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 20.0),
-                  child: Image.asset("assets/images/logo.jpg"),
                 ),
                 const Padding(
                   padding: EdgeInsets.only(
@@ -100,33 +95,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       fontWeight: FontWeight.w600,
                       color: Colors.black,
                     ),
-                  ),
-                ),
-                const Padding(
-                  padding: EdgeInsets.only(
-                    top: 40.0,
-                    right: 50.0,
-                    left: 50.0,
-                  ),
-                  child: TextField(
-                    enabled: false,
-                    decoration: InputDecoration(
-                        hintText: 'Mobile Number',
-                        prefixText: "+91",
-                        prefixIcon: Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Image(
-                            image: AssetImage(
-                              "assets/images/flag.png",
-                            ),
-                            height: 10.0,
-                            width: 10.0,
-                          ),
-                        )),
-                    style: TextStyle(
-                      color: Colors.black45,
-                    ),
-                    textAlign: TextAlign.center,
                   ),
                 ),
                 Padding(
@@ -178,19 +146,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                   ),
-                ),
-                const Padding(
-                  padding: EdgeInsets.only(top: 30.0),
-                  child: Text(
-                    "By continuing, you agree to the\nTerms of services",
-                    style: TextStyle(color: Colors.black87, fontSize: 12.0),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                Container(
-                  height: 80.0,
-                  padding: const EdgeInsets.fromLTRB(100.0, 10.0, 100.0, 20.0),
-                  child: Image.asset("assets/images/logo.jpg"),
                 ),
               ],
             ),

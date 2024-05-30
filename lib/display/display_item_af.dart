@@ -6,7 +6,6 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:chips_choice/chips_choice.dart';
-import 'package:demoapp/wishlist/wishlist_af.dart';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -319,13 +318,7 @@ class _DisplayItemPageState extends State<DisplayItemPage> {
                           context: context,
                           builder: (BuildContext context) {
                             return SizeFilter(
-                              onFilterApplied: (sizeSelected) {
-                                addToWishlist(
-                                  sizeSelected,
-                                  desc[randomIndex],
-                                  widget.productID,
-                                );
-                              },
+                              onFilterApplied: (sizeSelected) {},
                               sizeOptions: extractSizeValues(filterValues),
                             );
                           },
@@ -683,62 +676,6 @@ class _DisplayItemPageState extends State<DisplayItemPage> {
     final imgByteData = await img.toByteData(format: ui.ImageByteFormat.png);
 
     return imgByteData!.buffer.asUint8List();
-  }
-
-  void addToWishlist(String prodSize, String prodDesc, String productID) async {
-    _showCustomProgressDialog(context);
-
-    String result = await saveItemToDB(
-      imageUrl,
-      prodName,
-      prodSize,
-      prodDesc,
-      productID,
-    );
-
-    // dis dialog
-    Navigator.of(context).pop();
-
-    if (result == "Success") {
-      Fluttertoast.showToast(msg: "Item Added to wishlist");
-    } else {
-      Fluttertoast.showToast(msg: "Retry Adding Item.");
-    }
-  }
-
-  void _showCustomProgressDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        return Dialog(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          child: Container(
-            width: 100,
-            height: 100,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12.0),
-            ),
-            child: const Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircularProgressIndicator(
-                    color: Colors.green,
-                  ),
-                  SizedBox(
-                    height: 12.0,
-                  ),
-                  Text("Adding to wishlist..."),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
   }
 }
 

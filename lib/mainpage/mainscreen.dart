@@ -5,12 +5,7 @@ import 'package:circular_bottom_navigation/tab_item.dart';
 import 'package:demoapp/dashboard_pages/dashboard.dart';
 import 'package:demoapp/dashboard_pages/notification.dart';
 import 'package:demoapp/dashboard_pages/settings.dart';
-import 'package:demoapp/side_menu/bakers.dart';
-import 'package:demoapp/side_menu/bars.dart';
-import 'package:demoapp/side_menu/caterers.dart';
-import 'package:demoapp/side_menu/hotels.dart';
-import 'package:demoapp/side_menu/restaurant.dart';
-import 'package:demoapp/wishlist/displaywishlist.dart';
+import 'package:demoapp/dashboard_pages/wishlist.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -86,7 +81,6 @@ class _MainScreenState extends State<MainScreen> {
 
     final List widgetOptions = [
       const DashboardScreen(),
-      // const WishlistPage(),
       const WishlistPage(),
       const NotificationPage(),
       const SettingsPage()
@@ -129,7 +123,7 @@ class _MainScreenState extends State<MainScreen> {
                 const SizedBox(
                   width: 12.0,
                 ),
-                const AnimationText(title: "Venus (India) Inc."),
+                const AnimationText(title: "Grocery App"),
               ],
             ),
           ),
@@ -143,168 +137,6 @@ class _MainScreenState extends State<MainScreen> {
           child: widgetOptions.elementAt(_selectedIndex),
         ),
         extendBody: true,
-        drawer: Drawer(
-          backgroundColor: Colors.green.shade50,
-          child: ListView(
-            children: <Widget>[
-              const DrawerHeader(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Explore More",
-                      style: TextStyle(
-                        fontSize: 30.0,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 20.0,
-                    ),
-                    Text(
-                      "The Specific Collection For Each Category",
-                      style: TextStyle(
-                        color: Colors.black,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(
-                          12.0,
-                        ),
-                        color: Colors.white60,
-                      ),
-                      margin: const EdgeInsets.only(
-                        left: 10.0,
-                        top: 20.0,
-                        right: 10.0,
-                      ),
-                      child: ListTile(
-                        leading: const Icon(Icons.restaurant),
-                        title: const Text("Restaurants"),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const RestaurantPage(),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(
-                          12.0,
-                        ),
-                        color: Colors.white60,
-                      ),
-                      margin: const EdgeInsets.only(
-                        left: 10.0,
-                        top: 10.0,
-                        right: 10.0,
-                      ),
-                      child: ListTile(
-                        leading: const Icon(Icons.local_bar),
-                        title: const Text("Bars"),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const BarsPage(),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(
-                          12.0,
-                        ),
-                        color: Colors.white60,
-                      ),
-                      margin: const EdgeInsets.only(
-                        left: 10.0,
-                        top: 10.0,
-                        right: 10.0,
-                      ),
-                      child: ListTile(
-                        leading: const Icon(Icons.hotel),
-                        title: const Text("Hotels"),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const HotelsPage(),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(
-                          12.0,
-                        ),
-                        color: Colors.white60,
-                      ),
-                      margin: const EdgeInsets.only(
-                        left: 10.0,
-                        top: 10.0,
-                        right: 10.0,
-                      ),
-                      child: ListTile(
-                        leading: const Icon(Icons.local_pizza),
-                        title: const Text("Caterers"),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const CaterersPage(),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(
-                          12.0,
-                        ),
-                        color: Colors.white60,
-                      ),
-                      margin: const EdgeInsets.only(
-                        left: 10.0,
-                        top: 10.0,
-                        right: 10.0,
-                      ),
-                      child: ListTile(
-                        leading: const Icon(Icons.cake),
-                        title: const Text("Bakers"),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const BakersPage(),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ),
-        ),
         bottomNavigationBar: CircularBottomNavigation(
           tabItems,
           controller: _navigationController,
