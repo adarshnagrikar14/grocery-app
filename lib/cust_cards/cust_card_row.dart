@@ -1,16 +1,11 @@
-// ignore_for_file: avoid_print, use_build_context_synchronously
+// ignore_for_file: avoid_print, use_build_context_synchronously, library_private_types_in_public_api
 
-import 'dart:async';
 import 'dart:math';
 
 import 'package:demoapp/display/display_items.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import 'dart:ui' as ui;
 
 class CustomCardRow extends StatefulWidget {
   final String assetUrl;
@@ -40,7 +35,7 @@ class _CustomCardRowState extends State<CustomCardRow> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.65,
+      width: MediaQuery.of(context).size.width * 0.75,
       child: InkWell(
         onTap: () {
           Navigator.push(
@@ -55,7 +50,7 @@ class _CustomCardRowState extends State<CustomCardRow> {
           );
         },
         child: Card(
-          color: Colors.grey.shade50,
+          color: Colors.grey.shade100,
           elevation: 1.2,
           margin: const EdgeInsets.only(
             left: 10.0,
@@ -77,7 +72,7 @@ class _CustomCardRowState extends State<CustomCardRow> {
                         widget.assetUrl,
                         width: MediaQuery.of(context).size.width,
                         fit: BoxFit.fitWidth,
-                        height: 160.0,
+                        height: 150.0,
                       ),
                     ),
                     Padding(
@@ -104,6 +99,29 @@ class _CustomCardRowState extends State<CustomCardRow> {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        top: 10.0,
+                        bottom: 10.0,
+                        left: 6.0,
+                      ),
+                      child: RatingBar.builder(
+                        initialRating: 4.2,
+                        minRating: 0.5,
+                        maxRating: 5,
+                        direction: Axis.horizontal,
+                        unratedColor: Colors.green,
+                        allowHalfRating: true,
+                        itemCount: 5,
+                        ignoreGestures: true,
+                        itemSize: 17.0,
+                        itemBuilder: (context, _) => const Icon(
+                          Icons.star,
+                          color: Colors.amber,
+                        ),
+                        onRatingUpdate: (rating) {},
+                      ),
+                    ),
                   ],
                 ),
 
@@ -118,11 +136,7 @@ class _CustomCardRowState extends State<CustomCardRow> {
                       showModalBottomSheet(
                         context: context,
                         builder: (BuildContext context) {
-                          return SizeFilter(
-                            onFilterApplied: (sizeSelected) {
-                              Fluttertoast.showToast(msg: "Added");
-                            },
-                          );
+                          return const SizeFilter();
                         },
                       );
                     },
@@ -148,135 +162,144 @@ class _CustomCardRowState extends State<CustomCardRow> {
       ),
     );
   }
+}
 
-  Future<void> saveToSharedPreferences(String imageUrl, String title,
-      String string, BuildContext context) async {
-    final prefs = await SharedPreferences.getInstance();
-    List<String> wishlist = prefs.getStringList('Wishlist3') ?? [];
-    wishlist.add('$imageUrl;$title;$string');
-    await prefs.setStringList('Wishlist3', wishlist);
+class SizeFilter extends StatefulWidget {
+  const SizeFilter({
+    Key? key,
+  }) : super(key: key);
 
-    Timer(
-      const Duration(
-        milliseconds: 500,
-      ),
-      () {
-        Fluttertoast.showToast(msg: "Item Added to wishlist");
+  @override
+  _SizeFilterState createState() => _SizeFilterState();
+}
 
-        showModalBottomSheet(
-          context: context,
-          builder: (BuildContext context) {
-            return SizedBox(
-              height: 250.0,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Center(
-                      child: Container(
-                        width: 60.0,
-                        height: 5.0,
-                        decoration: BoxDecoration(
-                          color: Colors.grey,
-                          borderRadius: BorderRadius.circular(15.0),
-                        ),
-                      ),
-                    ),
+class _SizeFilterState extends State<SizeFilter> {
+  List<String> selectedSize = [];
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 250.0,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            flex: 1,
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Center(
+                child: Container(
+                  width: 60.0,
+                  height: 5.0,
+                  decoration: BoxDecoration(
+                    color: Colors.grey,
+                    borderRadius: BorderRadius.circular(15.0),
                   ),
-                  const Padding(
-                    padding: EdgeInsets.only(
-                      top: 12.0,
-                      left: 12.0,
-                    ),
-                    child: ListTile(
-                      title: Text(
-                        "Item Added to Wishlist",
-                        style: TextStyle(
-                          fontSize: 18.0,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(
-                      left: 25.0,
-                      right: 25.0,
-                    ),
-                    child: Text(
-                      "You can watch it in wishlist section",
-                      style: TextStyle(
-                        fontSize: 15.0,
-                        color: Colors.black45,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      bottom: 20.0,
-                      left: 25.0,
-                      right: 25.0,
-                    ),
-                    child: RoundedBorderButton(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      text: "Done",
-                    ),
-                  ),
-                ],
+                ),
               ),
-            );
-          },
-        );
-      },
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Padding(
+              padding: const EdgeInsets.only(
+                // top: 12.0,
+                left: 3.0,
+              ),
+              child: ListTile(
+                title: const Text("Add To Wishlist?"),
+                trailing: IconButton(
+                  icon: const Icon(
+                    Icons.close,
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 3,
+            child: SizedBox(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    left: 19.0,
+                    right: 18.0,
+                    top: 20.0,
+                    bottom: 20.0,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: 1.0,
+                        color: Colors.grey,
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.only(top: 10.0),
+                        child: Text(
+                          "You Can see items added in wishlist in the menu option given below.",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15.0,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Padding(
+              padding: const EdgeInsets.only(
+                top: 8.0,
+                bottom: 10.0,
+                left: 15.0,
+                right: 15.0,
+              ),
+              child: SizedBox(
+                height: 50.0,
+                width: MediaQuery.of(context).size.width,
+                child: OutlinedButton(
+                  onPressed: () {
+                    Fluttertoast.showToast(msg: "Added to Wishlist");
+                    applyFilter();
+                  },
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(color: Colors.green.shade800),
+                    backgroundColor: Colors.green.shade300,
+                  ),
+                  child: const Text(
+                    "Add to Wishlist",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18.0,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
-  Future<Uint8List> textToImage(String text) async {
-    final recorder = ui.PictureRecorder();
-    final canvas = Canvas(
-      recorder,
-      Rect.fromPoints(
-        const Offset(0, 0),
-        const Offset(400, 100),
-      ),
-    );
-
-    final textPainter = TextPainter(
-      textAlign: TextAlign.center,
-      text: TextSpan(
-        text: text,
-        style: const TextStyle(
-          color: Colors.black,
-          fontSize: 20.0,
-        ),
-      ),
-      textDirection: TextDirection.ltr,
-    );
-
-    textPainter.layout(minWidth: 400, maxWidth: 400);
-
-    canvas.drawColor(
-      Colors.white,
-      BlendMode.color,
-    );
-
-    final offsetX = (400 - textPainter.width) / 2;
-    final offsetY = (100 - textPainter.height) / 2;
-    final textOffset = Offset(offsetX, offsetY);
-
-    textPainter.paint(
-      canvas,
-      textOffset,
-    );
-
-    final picture = recorder.endRecording();
-    final img = await picture.toImage(400, 100);
-    final imgByteData = await img.toByteData(format: ui.ImageByteFormat.png);
-
-    return imgByteData!.buffer.asUint8List();
+  void applyFilter() {
+    Navigator.pop(context);
+    Fluttertoast.showToast(msg: "Added to Cart");
   }
 }

@@ -1,18 +1,12 @@
-import 'dart:math';
-
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:chips_choice/chips_choice.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:demoapp/cust_cards/cust_card_row.dart';
 import 'package:demoapp/dashboard_pages/search.dart';
-import 'package:demoapp/display/display_items.dart';
 import 'package:demoapp/types/plates.dart';
 import 'package:demoapp/types/container.dart';
 import 'package:demoapp/types/tissues.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import 'package:demoapp/cust_cards/cust_card_linear_mainpage.dart';
 
 import '../show_more/show_more_af_2.dart';
 
@@ -35,15 +29,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     super.initState();
 
     selectedImageCarousel = 0;
-    selectedItems = [options[0]];
   }
-
-  List<String> options = [
-    "All",
-    "Affordable",
-    "Reasonable",
-    "Premium\n",
-  ];
 
   List<String> imageUrls = [
     "https://img.freepik.com/free-vector/flat-design-food-sale-background_23-2149219274.jpg?t=st=1717073699~exp=1717077299~hmac=153bd6bb5225d93c2c8ae2c0e1945fdecef53d8d1dafd242f1c0e9cf6485ac03&w=1380",
@@ -452,7 +438,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   child: const FeaturedItems(),
                 ),
 
-                // show more : featured
                 RoundedBorderButton(
                   onTap: () {
                     Navigator.push(
@@ -476,7 +461,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     left: 20.0,
                   ),
                   child: Text(
-                    "Refined Selections",
+                    "Fresh for you...",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 18.0,
@@ -485,74 +470,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                 ),
 
-                // chips
-                Padding(
-                  padding: const EdgeInsets.only(
-                    top: 2.0,
-                    left: 2.0,
-                  ),
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    alignment: Alignment.centerLeft,
-                    child: ChipsChoice<String>.single(
-                      value: selectedItems.isNotEmpty ? selectedItems[0] : null,
-                      onChanged: (val) {
-                        setState(() {
-                          selectedItems = [val];
-                        });
-                      },
-                      choiceStyle: C2ChipStyle.filled(
-                        color: Colors.black12,
-                        checkmarkColor: Colors.green.shade900,
-                        selectedStyle: C2ChipStyle.filled(
-                          color: Colors.green.shade100,
-                        ),
-                      ),
-                      choiceCheckmark: true,
-                      choiceItems: C2Choice.listFrom<String, String>(
-                        source: options,
-                        value: (i, v) => v,
-                        label: (i, v) => v,
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                    left: 20.0,
-                    bottom: 8.0,
-                  ),
-                  child: Text(
-                    "Showing some refined ${selectedItems.isNotEmpty ? selectedItems[0] : "None"} products",
-                    style: const TextStyle(
-                      fontSize: 14.0,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-
                 Container(
                   margin: const EdgeInsets.only(
                     left: 10,
                     right: 10,
                     top: 10,
                   ),
+                  padding: const EdgeInsets.only(
+                    bottom: 5.0,
+                  ),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(
                       12.0,
                     ),
                   ),
-                  child: const SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [],
-                    ),
-                  ),
+                  child: const FeaturedItems(),
                 ),
-
-                // categories
                 const Space(
-                  top: 22,
+                  top: 20,
                   bottom: 0,
                 ),
                 Padding(
@@ -561,7 +496,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     left: 20.0,
                   ),
                   child: Text(
-                    "Our Innovations",
+                    "More to Explore",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 20.0,
@@ -572,9 +507,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
                 Padding(
                   padding: const EdgeInsets.only(
-                    left: 12.0,
-                    top: 15.0,
-                    right: 12.0,
+                    left: 18.0,
+                    top: 10.0,
+                    right: 18.0,
                   ),
                   child: Container(
                     decoration: BoxDecoration(
@@ -590,7 +525,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         8.0,
                       ),
                       child: Text(
-                        "Showing some of our innovated products handcrafted for your selection",
+                        "See, Pick and Purchase more of our product range available for you.",
+                        textAlign: TextAlign.justify,
                         style: TextStyle(
                           fontSize: 14.0,
                         ),
@@ -603,116 +539,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   margin: const EdgeInsets.only(
                     left: 10,
                     right: 10,
+                    bottom: 130,
                     top: 10,
+                  ),
+                  padding: const EdgeInsets.only(
+                    bottom: 5.0,
                   ),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(
                       12.0,
                     ),
-                    // color: Colors.amber.shade300,
                   ),
-                  child: const SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        // CustomCardRow(
-                        //   assetUrl: "assets/images/cont4.jpg",
-                        //   title: "Innovation 1: Product",
-                        // ),
-                        // CustomCardRow(
-                        //   assetUrl: "assets/images/cont2.jpg",
-                        //   title: "Innovation 2: Product",
-                        // ),
-                        // CustomCardRow(
-                        //   assetUrl: "assets/images/tissue1.jpg",
-                        //   title: "Innovation 3: Product",
-                        // ),
-                        // CustomCardRow(
-                        //   assetUrl: "assets/images/raw2.jpg",
-                        //   title: "Innovation 4: Product",
-                        // ),
-                      ],
-                    ),
-                  ),
-                ),
-
-                const Space(
-                  top: 22,
-                  bottom: 0,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                    top: 15.0,
-                    left: 20.0,
-                  ),
-                  child: Text(
-                    "Launches you would Love",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20.0,
-                      fontFamily: GoogleFonts.tiltNeon().fontFamily,
-                    ),
-                  ),
-                ),
-
-                Padding(
-                  padding: const EdgeInsets.only(
-                    left: 12.0,
-                    top: 15.0,
-                    right: 12.0,
-                  ),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(
-                        8.0,
-                      ),
-                      border: Border.all(
-                        color: Colors.black38,
-                      ),
-                    ),
-                    child: const Padding(
-                      padding: EdgeInsets.all(
-                        8.0,
-                      ),
-                      child: Text(
-                        "Showing some of Our hot launches to fulfill what you want.",
-                        style: TextStyle(
-                          fontSize: 14.0,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-
-                ListView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: products.length,
-                  itemBuilder: (context, index) {
-                    final product = products[index];
-                    final assetUrl = product['ImageLink'] ?? '';
-                    final title = product['ProductName'] ?? '';
-                    final type = product['ProductType'] ?? '';
-                    final productID = product['ProductId'] ?? "";
-
-                    List<String> desc = [
-                      "Our Plate Cardboard is more than just a serving solution; it's your sustainable partner. Crafted from durable materials, it's designed to withstand the weight of your favorite dishes while being environmentally conscious. Choose it for a guilt-free dining experience that's both robust and eco-friendly.",
-                      "Our Tissue General offers the perfect blend of resilience and responsibility. With excellent absorbency and strength, it tackles spills and messes effectively. Plus, it's an eco-friendly choice, crafted from sustainable materials to help maintain hygiene while preserving the planet.",
-                      "Our Container is not just for storing your meals; it's designed to last. Its sturdy construction ensures that your food remains fresh, safe, and secure. What's more, it's an eco-conscious choice, made from sustainable materials, so you can savor your meals knowing you're making a responsible choice for the environment",
-                      "Our Toothpicks are more than just handy tools; they're crafted to withstand the rigors of daily use. Their sturdiness makes them perfect for a variety of tasks. In addition to durability, they are made from sustainable materials, combining strength with eco-friendliness to meet your needs while caring for the planet.",
-                    ];
-
-                    final random = Random();
-                    int randomIndex = random.nextInt(desc.length);
-
-                    return CustomCardMain(
-                      assetUrl: assetUrl,
-                      title: title,
-                      productType: type,
-                      productID: productID,
-                      description: desc[randomIndex],
-                    );
-                  },
+                  child: const FeaturedItems(),
                 ),
               ],
             ),
@@ -740,7 +578,10 @@ class FeaturedItems extends StatelessWidget {
       future: fetchFeaturedItems(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
+          return const Center(
+              child: CircularProgressIndicator(
+            color: Colors.green,
+          ));
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
@@ -779,9 +620,9 @@ class RoundedBorderButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(
-        top: 28.0,
-        left: 10.0,
-        right: 10.0,
+        top: 20.0,
+        left: 14.0,
+        right: 14.0,
       ),
       child: ElevatedButton(
         onPressed: onTap,
@@ -793,94 +634,13 @@ class RoundedBorderButton extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12.0),
           ),
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.green.shade50,
           minimumSize: Size(
             MediaQuery.of(context).size.width,
             50.0,
           ),
         ),
         child: Text(text),
-      ),
-    );
-  }
-}
-
-class CustomCard extends StatelessWidget {
-  final String assetUrl;
-  final String title;
-
-  const CustomCard({
-    required this.assetUrl,
-    required this.title,
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Flexible(
-      flex: 1,
-      child: InkWell(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => DisplayItemPage(
-                imageUrl: assetUrl,
-                productName: title,
-                desc: "Description",
-              ),
-            ),
-          );
-        },
-        child: Card(
-          color: Colors.white,
-          elevation: 0.7,
-          margin: const EdgeInsets.only(
-            left: 10.0,
-            top: 20.0,
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(15.0),
-                  child: Image.asset(
-                    assetUrl,
-                    width: MediaQuery.of(context).size.width,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 14.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-                const Padding(
-                  padding: EdgeInsets.only(left: 8.0),
-                  child: Text(
-                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.",
-                    style: TextStyle(
-                      fontSize: 13.0,
-                      color: Colors.black87,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                )
-              ],
-            ),
-          ),
-        ),
       ),
     );
   }

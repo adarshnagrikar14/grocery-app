@@ -1,9 +1,11 @@
 // ignore_for_file: use_build_context_synchronously, library_private_types_in_public_api, avoid_print
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DisplayItemPage extends StatefulWidget {
   final String imageUrl;
@@ -133,12 +135,14 @@ class _DisplayItemPageState extends State<DisplayItemPage> {
                         context: context,
                         builder: (BuildContext context) {
                           return SizeFilter(
-                            onFilterApplied: (sizeSelected) {},
+                            pName: prodName,
+                            pUrl: imageUrl,
+                            pDesc: prodDescription,
                           );
                         },
                       );
                     },
-                    text: "Add to Wishlist",
+                    text: "Add to Cart",
                   ),
                   Padding(
                     padding: const EdgeInsets.only(
@@ -170,50 +174,42 @@ class _DisplayItemPageState extends State<DisplayItemPage> {
                       bottom: 20.0,
                     ),
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        Expanded(
-                          child: Chip(
-                            label: const Text("Feature 1"),
-                            avatar: const Icon(
-                              Icons.check,
-                              color: Colors.green,
-                            ),
-                            backgroundColor: Colors.green.shade100,
-                            labelStyle: const TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold),
+                        Chip(
+                          label: const Text("Fresh"),
+                          avatar: const Icon(
+                            Icons.check,
+                            color: Colors.green,
+                          ),
+                          backgroundColor: Colors.green.shade100,
+                          labelStyle: const TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                              left: 8.0,
-                              right: 8.0,
-                            ),
-                            child: Chip(
-                              label: const Text("Feature 2"),
-                              avatar: const Icon(
-                                Icons.check,
-                                color: Colors.green,
-                              ),
-                              backgroundColor: Colors.green.shade100,
-                              labelStyle: const TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold),
-                            ),
+                        Chip(
+                          label: const Text("Healthy"),
+                          avatar: const Icon(
+                            Icons.check,
+                            color: Colors.green,
+                          ),
+                          backgroundColor: Colors.green.shade100,
+                          labelStyle: const TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                        Expanded(
-                          child: Chip(
-                            label: const Text("Feature 3"),
-                            avatar: const Icon(
-                              Icons.check,
-                              color: Colors.green,
-                            ),
-                            backgroundColor: Colors.green.shade100,
-                            labelStyle: const TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold),
+                        Chip(
+                          label: const Text("Labelled"),
+                          avatar: const Icon(
+                            Icons.check,
+                            color: Colors.green,
+                          ),
+                          backgroundColor: Colors.green.shade100,
+                          labelStyle: const TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ],
@@ -229,59 +225,8 @@ class _DisplayItemPageState extends State<DisplayItemPage> {
                       color: Colors.grey,
                     ),
                   ),
-                  const Padding(
-                    padding: EdgeInsets.only(
-                      top: 10.0,
-                      left: 3,
-                      bottom: 50.0,
-                    ),
-                    child: Text(
-                      "More such products",
-                      style: TextStyle(
-                        fontSize: 15.0,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
                 ],
               ),
-            ),
-          ),
-          Positioned(
-            bottom: 50.0,
-            right: 20.0,
-            child: Column(
-              children: [
-                FloatingActionButton(
-                  onPressed: () async {
-                    if (!await launchUrl(Uri.parse("tel:9168202971"))) {
-                      throw Exception('Could not launch');
-                    }
-                  },
-                  backgroundColor: Colors.green.shade50,
-                  child: const Icon(
-                    Icons.call,
-                    size: 30.0,
-                  ),
-                ),
-                const SizedBox(
-                  height: 20.0,
-                ),
-                FloatingActionButton(
-                  onPressed: () async {
-                    if (!await launchUrl(
-                        Uri.parse("https://wa.me/919168202971"))) {
-                      throw Exception('Could not launch');
-                    }
-                  },
-                  backgroundColor: Colors.green.shade50,
-                  child: Image.asset(
-                    "assets/images/what.png",
-                    width: 30.0,
-                  ),
-                ),
-              ],
             ),
           ),
         ],
@@ -291,11 +236,15 @@ class _DisplayItemPageState extends State<DisplayItemPage> {
 }
 
 class SizeFilter extends StatefulWidget {
-  final Function(String) onFilterApplied;
+  final String pName;
+  final String pUrl;
+  final String pDesc;
 
   const SizeFilter({
-    required this.onFilterApplied,
     Key? key,
+    required this.pName,
+    required this.pUrl,
+    required this.pDesc,
   }) : super(key: key);
 
   @override
@@ -341,7 +290,7 @@ class _SizeFilterState extends State<SizeFilter> {
                 left: 3.0,
               ),
               child: ListTile(
-                title: const Text("Add To Wishlist?"),
+                title: const Text("Add To Cart"),
                 trailing: IconButton(
                   icon: const Icon(
                     Icons.close,
@@ -375,7 +324,7 @@ class _SizeFilterState extends State<SizeFilter> {
                       const Padding(
                         padding: EdgeInsets.only(top: 10.0),
                         child: Text(
-                          "You Can see items added in wishlist in the menu option given below.",
+                          "You Can see items added in cart in the menu option on Dashboard.",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 15.0,
@@ -394,7 +343,7 @@ class _SizeFilterState extends State<SizeFilter> {
             child: Padding(
               padding: const EdgeInsets.only(
                 top: 8.0,
-                bottom: 10.0,
+                bottom: 15.0,
                 left: 15.0,
                 right: 15.0,
               ),
@@ -403,15 +352,14 @@ class _SizeFilterState extends State<SizeFilter> {
                 width: MediaQuery.of(context).size.width,
                 child: OutlinedButton(
                   onPressed: () {
-                    Fluttertoast.showToast(msg: "Added to Wishlist");
-                    applyFilter();
+                    addtoCart();
                   },
                   style: OutlinedButton.styleFrom(
                     side: BorderSide(color: Colors.green.shade800),
                     backgroundColor: Colors.green.shade300,
                   ),
                   child: const Text(
-                    "Add to Wishlist",
+                    "Add to cart",
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -427,9 +375,31 @@ class _SizeFilterState extends State<SizeFilter> {
     );
   }
 
-  void applyFilter() {
+  void addtoCart() async {
+    String pName = widget.pName;
+    String pUrl = widget.pUrl;
+    String pDesc = widget.pDesc;
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String>? cartList = prefs.getStringList('cartList');
+
+    Map<String, String> newCartItem = {
+      'pName': pName,
+      'pUrl': pUrl,
+      'pDesc': pDesc,
+    };
+
+    String newCartItemJson = jsonEncode(newCartItem);
+
+    if (cartList == null) {
+      cartList = [newCartItemJson];
+    } else {
+      cartList.add(newCartItemJson);
+    }
+
+    await prefs.setStringList('cartList', cartList);
     Navigator.pop(context);
-    widget.onFilterApplied(selectedSize[0]);
+    Fluttertoast.showToast(msg: "Added to Cart");
   }
 }
 
@@ -460,50 +430,6 @@ class RoundedBorderButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(12.0),
           ),
           backgroundColor: Colors.yellow.shade300,
-          minimumSize: Size(
-            MediaQuery.of(context).size.width,
-            50.0,
-          ),
-        ),
-        child: Text(
-          text,
-          style: const TextStyle(
-            fontSize: 17.0,
-            color: Colors.black,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class RoundedBorderButtonGreen extends StatelessWidget {
-  final VoidCallback onTap;
-  final String text;
-
-  const RoundedBorderButtonGreen({
-    Key? key,
-    required this.onTap,
-    required this.text,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(
-        top: 28.0,
-      ),
-      child: ElevatedButton(
-        onPressed: onTap,
-        style: ElevatedButton.styleFrom(
-          side: BorderSide(
-            color: Colors.green.shade900,
-            width: MediaQuery.of(context).size.width * 0.002,
-          ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12.0),
-          ),
-          backgroundColor: Colors.green.shade100,
           minimumSize: Size(
             MediaQuery.of(context).size.width,
             50.0,

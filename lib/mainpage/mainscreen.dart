@@ -50,8 +50,8 @@ class _MainScreenState extends State<MainScreen> {
           ),
         ),
         TabItem(
-          Icons.favorite_rounded,
-          "Wishlist",
+          Icons.shopping_basket,
+          "Cart",
           Colors.green.shade100,
           labelStyle: TextStyle(
             fontWeight: FontWeight.bold,
@@ -123,7 +123,7 @@ class _MainScreenState extends State<MainScreen> {
                 const SizedBox(
                   width: 12.0,
                 ),
-                const AnimationText(title: "Grocery App"),
+                const AnimationText(title: "Grocery Store"),
               ],
             ),
           ),
