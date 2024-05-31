@@ -1,4 +1,4 @@
-# Venus Inc
+# Grocery App
 
 Made in flutter Framework
-## Developers: Adarsh Nagrikar, Gaurav Kumbhare
+## Developers: Adarsh Nagrikar
