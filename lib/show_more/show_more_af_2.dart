@@ -299,7 +299,7 @@ class _ShowProductAllState extends State<ShowProductAll2> {
 
   Future<List<Map<String, dynamic>>> fetchFeaturedItems() async {
     QuerySnapshot querySnapshot =
-        await FirebaseFirestore.instance.collection("More").get();
+        await FirebaseFirestore.instance.collection("All").get();
     return querySnapshot.docs
         .map((doc) => doc.data() as Map<String, dynamic>)
         .toList();

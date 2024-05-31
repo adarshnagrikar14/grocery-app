@@ -2,9 +2,6 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:demoapp/cust_cards/cust_card_row.dart';
 import 'package:demoapp/dashboard_pages/search.dart';
-import 'package:demoapp/types/plates.dart';
-import 'package:demoapp/types/container.dart';
-import 'package:demoapp/types/tissues.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -180,9 +177,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   bottom: 0,
                 ),
 
-                // categories
                 Container(
-                  // color: Colors.grey,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(
                       12.0,
@@ -226,7 +221,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) =>
-                                              const PlatesPage(type: "Plates"),
+                                              const ShowProductAll2(),
                                         ),
                                       );
                                     },
@@ -241,7 +236,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       width: 60.0,
                                       child: Center(
                                         child: Text(
-                                          "Plates",
+                                          "Oil",
                                         ),
                                       ),
                                     ),
@@ -251,13 +246,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               Column(
                                 children: [
                                   RoundedImage(
-                                    imageUrl: "assets/images/oil.jpg",
+                                    imageUrl: "assets/images/flour.jpg",
                                     onTap: () {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) =>
-                                              const TissuePage(type: "Tissues"),
+                                              const ShowProductAll2(),
                                         ),
                                       );
                                     },
@@ -272,7 +267,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       width: 60.0,
                                       child: Center(
                                         child: Text(
-                                          "Tissues",
+                                          "Flour",
                                         ),
                                       ),
                                     ),
@@ -282,14 +277,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               Column(
                                 children: [
                                   RoundedImage(
-                                    imageUrl: "assets/images/oil.jpg",
+                                    imageUrl: "assets/images/vegetable.jpg",
                                     onTap: () {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) =>
-                                              const ContainerPage(
-                                                  type: "Containers"),
+                                              const ShowProductAll2(),
                                         ),
                                       );
                                     },
@@ -304,7 +298,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       width: 60.0,
                                       child: Center(
                                         child: Text(
-                                          "Containers",
+                                          "Vegetables",
                                           style: TextStyle(
                                             overflow: TextOverflow.ellipsis,
                                           ),
@@ -319,14 +313,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               Column(
                                 children: [
                                   RoundedImage(
-                                    imageUrl: "assets/images/oil.jpg",
+                                    imageUrl: "assets/images/acc.jpg",
                                     onTap: () {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) =>
-                                              const PlatesPage(
-                                                  type: "Toothpicks"),
+                                              const ShowProductAll2(),
                                         ),
                                       );
                                     },
@@ -341,7 +334,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       width: 60.0,
                                       child: Center(
                                         child: Text(
-                                          "Toothpicks",
+                                          "Accessories",
                                           style: TextStyle(
                                             overflow: TextOverflow.ellipsis,
                                           ),
@@ -358,14 +351,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 child: Column(
                                   children: [
                                     RoundedImage(
-                                      imageUrl: "assets/images/oil.jpg",
+                                      imageUrl: "assets/images/nec.jpeg",
                                       onTap: () {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) =>
-                                                const PlatesPage(
-                                                    type: "Cuttlery"),
+                                                const ShowProductAll2(),
                                           ),
                                         );
                                       },
@@ -380,7 +372,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         width: 60.0,
                                         child: Center(
                                           child: Text(
-                                            "Cuttlery",
+                                            "Essentials",
                                             style: TextStyle(
                                               overflow: TextOverflow.ellipsis,
                                             ),
@@ -680,7 +672,7 @@ class RoundedImage extends StatelessWidget {
               shape: BoxShape.circle,
               border: Border.all(
                 width: 1.2,
-                color: Colors.white,
+                color: Colors.black,
               ),
               color: Colors.grey.shade100,
             ),
@@ -689,13 +681,13 @@ class RoundedImage extends StatelessWidget {
                     imageUrl,
                     width: size,
                     height: size,
-                    fit: BoxFit.cover,
+                    fit: BoxFit.fitHeight,
                   )
                 : Image.network(
                     imageUrl,
                     width: size,
                     height: size,
-                    fit: BoxFit.cover,
+                    fit: BoxFit.fitHeight,
                   ),
           ),
         ),

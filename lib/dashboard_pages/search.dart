@@ -1,7 +1,4 @@
-import 'package:demoapp/display/display_items.dart';
-import 'package:demoapp/types/container.dart';
-import 'package:demoapp/types/plates.dart';
-import 'package:demoapp/types/tissues.dart';
+import 'package:demoapp/show_more/show_more_af_2.dart';
 import 'package:flutter/material.dart';
 
 class SearchPage extends StatefulWidget {
@@ -40,25 +37,26 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   final List<String> groceryList = [
-    'Plates',
-    'Tissues',
-    'Container',
-    "New buffet 14 printed: multi coloured",
-    "Top and Town 8 No: silver",
-    "Elite paper plate 10: multi coloured",
-    "Elite paper plate 7 no: multi coloured Medium size",
-    "Sweet heart 235: white",
-    "Top and town 6 no: silver",
-    "New buffet 14 printed: multi coloured",
-    "Elite paper plate 9 no: multi coloured",
-    "Elite paper plates 7 no: multi coloured",
-    "New buffet 12 printed: multi coloured",
-    "Top and town 9 no: silver Large size",
-    "Elite paper plate 9 no: multi coloured",
-    "First choice 235 plate: multi coloured",
-    "New buffet 10 printed: multi coloured",
-    "Elite paper plate 10 no: white",
-    "Sweet heart 305 mm: multi coloured"
+    'Milk',
+    'Bread',
+    'Eggs',
+    'Butter',
+    'Cheese',
+    'Chicken Breast',
+    'Ground Beef',
+    'Lettuce',
+    'Tomatoes',
+    'Onions',
+    'Potatoes',
+    'Carrots',
+    'Apples',
+    'Bananas',
+    'Orange Juice',
+    'Rice',
+    'Pasta',
+    'Cereal',
+    'Yogurt',
+    'Frozen Vegetables',
   ];
 
   List<String> searchResults = [];
@@ -137,42 +135,12 @@ class _SearchPageState extends State<SearchPage> {
                   return ListTile(
                     title: Text(searchResults[index]),
                     onTap: () {
-                      if (searchResults[index] == "Plates") {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                const PlatesPage(type: "Plates"),
-                          ),
-                        );
-                      } else if (searchResults[index] == "Tissues") {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                const TissuePage(type: "Tissues"),
-                          ),
-                        );
-                      } else if (searchResults[index] == "Container") {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                const ContainerPage(type: "Containers"),
-                          ),
-                        );
-                      } else {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => DisplayItemPage(
-                              imageUrl: "assets/images/tissue2.jpg",
-                              productName: searchResults[index],
-                              desc: "Description",
-                            ),
-                          ),
-                        );
-                      }
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ShowProductAll2(),
+                        ),
+                      );
                     },
                   );
                 },
