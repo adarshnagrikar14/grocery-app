@@ -435,7 +435,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       12.0,
                     ),
                   ),
-                  child: const FeaturedItems(),
+                  child: const FeaturedItems(
+                    category: "Featured",
+                  ),
                 ),
 
                 RoundedBorderButton(
@@ -484,7 +486,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       12.0,
                     ),
                   ),
-                  child: const FeaturedItems(),
+                  child: const FeaturedItems(
+                    category: "Fresh",
+                  ),
                 ),
                 const Space(
                   top: 20,
@@ -550,7 +554,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       12.0,
                     ),
                   ),
-                  child: const FeaturedItems(),
+                  child: const FeaturedItems(category: "More"),
                 ),
               ],
             ),
@@ -562,11 +566,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
 }
 
 class FeaturedItems extends StatelessWidget {
-  const FeaturedItems({Key? key}) : super(key: key);
+  final String category;
+  const FeaturedItems({Key? key, required this.category}) : super(key: key);
 
   Future<List<Map<String, dynamic>>> fetchFeaturedItems() async {
     QuerySnapshot querySnapshot =
-        await FirebaseFirestore.instance.collection('Featured').get();
+        await FirebaseFirestore.instance.collection(category).get();
     return querySnapshot.docs
         .map((doc) => doc.data() as Map<String, dynamic>)
         .toList();

@@ -1,9 +1,16 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:io';
+
 import 'package:chips_choice/chips_choice.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:demoapp/dashboard_pages/dashboard.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class AddItems extends StatefulWidget {
   const AddItems({super.key});
@@ -15,11 +22,11 @@ class AddItems extends StatefulWidget {
 class _AddItemsState extends State<AddItems> {
   TextEditingController productNameTC = TextEditingController();
   TextEditingController productDescriptionTC = TextEditingController();
-  TextEditingController productFeatureTC = TextEditingController();
+  String? _downloadUrl;
 
   List<String> selectedProductType = [];
   final List<String> optionProductType = [
-    "Feature",
+    "Featured",
     "More",
     "Fresh",
     "All",
@@ -130,48 +137,28 @@ class _AddItemsState extends State<AddItems> {
                 top: 25.0,
                 left: 20.0,
               ),
-              child: Text(
-                "Product Features",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 17.0,
-                  fontFamily: GoogleFonts.tiltNeon().fontFamily,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(
-                top: 12.0,
-                left: 20.0,
-                right: 20.0,
-                bottom: 10.0,
-              ),
-              child: Text(
-                "Enter features Seperated with Comma.",
-                style: TextStyle(
-                  fontSize: 15.0,
-                  fontFamily: GoogleFonts.tiltNeon().fontFamily,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(
-                top: 18.0,
-                left: 18.0,
-                right: 18.0,
-              ),
-              child: TextField(
-                controller: productFeatureTC,
-                decoration: InputDecoration(
-                  labelText: "Enter Product Features",
-                  border: OutlineInputBorder(
-                    borderSide: const BorderSide(
-                      color: Colors.green,
-                      width: 1.2,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Product Image",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 17.0,
+                      fontFamily: GoogleFonts.tiltNeon().fontFamily,
                     ),
-                    borderRadius: BorderRadius.circular(10.0),
                   ),
-                ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  GestureDetector(
+                    onTap: () => _pickImage(),
+                    child: const Icon(
+                      Icons.upload_file,
+                      size: 80,
+                    ),
+                  ),
+                ],
               ),
             ),
             const Space(top: 20, bottom: 1),
@@ -259,5 +246,76 @@ class _AddItemsState extends State<AddItems> {
     );
   }
 
-  Future<void> insertData() async {}
+  void insertData() async {
+    if (_downloadUrl!.isEmpty) return;
+
+    if (selectedProductType.isEmpty) {
+      Fluttertoast.showToast(msg: "Please select a product type.");
+      return;
+    }
+
+    String collectionName = selectedProductType[0];
+
+    String title = productNameTC.text;
+    String description = productDescriptionTC.text;
+
+    CollectionReference collectionRef =
+        FirebaseFirestore.instance.collection(collectionName);
+
+    await collectionRef.add({
+      'Title': title,
+      'Url': _downloadUrl,
+      'Description': description,
+    });
+
+    Fluttertoast.showToast(msg: "Item uploaded successfully.");
+
+    setState(() {
+      productNameTC.clear();
+      productDescriptionTC.clear();
+      selectedProductType.clear();
+    });
+  }
+
+  File? _image;
+
+  Future<void> _pickImage() async {
+    if (await Permission.photos.request().isGranted ||
+        await Permission.storage.request().isGranted) {
+      final pickedFile =
+          await ImagePicker().pickImage(source: ImageSource.gallery);
+      if (pickedFile != null) {
+        setState(() {
+          _image = File(pickedFile.path);
+        });
+        _uploadImage();
+      }
+    } else {
+      Fluttertoast.showToast(msg: "Please Grant Permisiion");
+      Navigator.pop(context);
+    }
+  }
+
+  Future<void> _uploadImage() async {
+    if (_image == null) return;
+
+    try {
+      String fileName = _image!.path.split('/').last;
+      FirebaseStorage storage = FirebaseStorage.instance;
+      Reference ref = storage.ref().child('uploads/$fileName');
+      UploadTask uploadTask = ref.putFile(_image!);
+
+      TaskSnapshot snapshot = await uploadTask;
+      _downloadUrl = await snapshot.ref.getDownloadURL();
+
+      setState(() {
+        _downloadUrl = _downloadUrl;
+      });
+
+      Fluttertoast.showToast(msg: "Image Uploaded");
+    } catch (e) {
+      Fluttertoast.showToast(msg: "Error Uploading Image");
+      Navigator.pop(context);
+    }
+  }
 }

@@ -1,13 +1,11 @@
 // ignore_for_file: library_private_types_in_public_api
 
-import 'dart:convert';
-import 'dart:math';
 import 'package:chips_choice/chips_choice.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:demoapp/cust_cards/cust_card_linear_productid.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:http/http.dart' as http;
 import 'package:lottie/lottie.dart';
 
 import '../dashboard_pages/search.dart';
@@ -42,82 +40,15 @@ class _ShowProductAllState extends State<ShowProductAll2> {
 
   List<String> optionCost = [
     "All",
-    "Affordable",
-    "Reasonable",
-    "Premium",
+    "Budget Friendly",
   ];
 
   @override
   void initState() {
     super.initState();
-    fetchProducts();
-    allowedToShow = false;
+    allowedToShow = true;
     selectedCost = [optionCost[0]];
     crockeryType = "";
-  }
-
-  Future<void> fetchProducts() async {
-    setState(() {
-      allowedToShow = false;
-    });
-
-    final response = await http.get(
-      Uri.parse('https://assignme-work.000webhostapp.com/venus/call.php'),
-    );
-
-    if (response.statusCode == 200) {
-      final List<dynamic> data = json.decode(response.body);
-
-      setState(
-        () {
-          products = List<Map<String, dynamic>>.from(data);
-          allowedToShow = true;
-        },
-      );
-    } else {
-      setState(() {
-        allowedToShow = false;
-      });
-    }
-  }
-
-  Future<void> fetchProductsWithFilter(List<String> filterValues) async {
-    setState(() {
-      allowedToShow = false;
-    });
-
-    final response = await http.get(
-      Uri.parse('https://assignme-work.000webhostapp.com/venus/call.php'),
-    );
-
-    if (response.statusCode == 200) {
-      final List<dynamic> data = json.decode(response.body);
-
-      setState(() {
-        filterValues = filterValues.where((value) => value != "All").toList();
-
-        products = List<Map<String, dynamic>>.from(data).where((product) {
-          final productFilters = product['Filters']
-              .split(',')
-              .map((value) => value.trim() as String)
-              .toList();
-
-          for (var filterValue in filterValues) {
-            if (filterValue.isNotEmpty &&
-                !productFilters.contains(filterValue)) {
-              return false;
-            }
-          }
-          return true;
-        }).toList();
-
-        allowedToShow = true;
-      });
-    } else {
-      setState(() {
-        allowedToShow = false;
-      });
-    }
   }
 
   @override
@@ -276,7 +207,7 @@ class _ShowProductAllState extends State<ShowProductAll2> {
                   Padding(
                     padding: const EdgeInsets.only(left: 16.0, right: 20.0),
                     child: Text(
-                      "Showing ${selectedCost.isNotEmpty ? selectedCost[0] : "None"}$crockeryType collection",
+                      "Showing ${selectedCost.isNotEmpty ? selectedCost[0] : "None"}$crockeryType Picks",
                       style: const TextStyle(
                         fontSize: 14.0,
                       ),
@@ -293,32 +224,47 @@ class _ShowProductAllState extends State<ShowProductAll2> {
               child: Stack(children: [
                 Visibility(
                   visible: allowedToShow,
-                  child: ListView.builder(
-                    itemCount: products.length,
-                    itemBuilder: (context, index) {
-                      final product = products[index];
-                      final assetUrl = product['ImageLink'] ?? '';
-                      final title = product['ProductName'] ?? '';
-                      final type = product['ProductType'] ?? '';
-                      final productID = product['ProductId'] ?? "";
-
-                      List<String> desc = [
-                        "Our Plate Cardboard is more than just a serving solution; it's your sustainable partner. Crafted from durable materials, it's designed to withstand the weight of your favorite dishes while being environmentally conscious. Choose it for a guilt-free dining experience that's both robust and eco-friendly.",
-                        "Our Tissue General offers the perfect blend of resilience and responsibility. With excellent absorbency and strength, it tackles spills and messes effectively. Plus, it's an eco-friendly choice, crafted from sustainable materials to help maintain hygiene while preserving the planet.",
-                        "Our Container is not just for storing your meals; it's designed to last. Its sturdy construction ensures that your food remains fresh, safe, and secure. What's more, it's an eco-conscious choice, made from sustainable materials, so you can savor your meals knowing you're making a responsible choice for the environment",
-                        "Our Toothpicks are more than just handy tools; they're crafted to withstand the rigors of daily use. Their sturdiness makes them perfect for a variety of tasks. In addition to durability, they are made from sustainable materials, combining strength with eco-friendliness to meet your needs while caring for the planet.",
-                      ];
-
-                      final random = Random();
-                      int randomIndex = random.nextInt(desc.length);
-
-                      return CustomCard3(
-                        assetUrl: assetUrl,
-                        title: title,
-                        productType: type,
-                        productID: productID,
-                        description: desc[randomIndex],
-                      );
+                  // child: ListView.builder(
+                  //   itemCount: products.length,
+                  //   itemBuilder: (context, index) {
+                  //     return CustomCard3(
+                  //       assetUrl: ,
+                  //       title: ,
+                  //       productType: "T",
+                  //       productID: "1",
+                  //       description: ,
+                  //     );
+                  //   },
+                  // ),
+                  child: FutureBuilder<List<Map<String, dynamic>>>(
+                    future: fetchFeaturedItems(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(
+                            child: CircularProgressIndicator(
+                          color: Colors.green,
+                        ));
+                      } else if (snapshot.hasError) {
+                        return Center(child: Text('Error: ${snapshot.error}'));
+                      } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                        return const Center(child: Text('No items found.'));
+                      } else {
+                        final items = snapshot.data!;
+                        return SingleChildScrollView(
+                          scrollDirection: Axis.vertical,
+                          child: Column(
+                            children: items.map((item) {
+                              return CustomCard3(
+                                assetUrl: item['Url'],
+                                title: item['Title'],
+                                description: item["Description"],
+                                productID: "1",
+                                productType: "Type",
+                              );
+                            }).toList(),
+                          ),
+                        );
+                      }
                     },
                   ),
                 ),
@@ -349,6 +295,14 @@ class _ShowProductAllState extends State<ShowProductAll2> {
         ],
       ),
     );
+  }
+
+  Future<List<Map<String, dynamic>>> fetchFeaturedItems() async {
+    QuerySnapshot querySnapshot =
+        await FirebaseFirestore.instance.collection("More").get();
+    return querySnapshot.docs
+        .map((doc) => doc.data() as Map<String, dynamic>)
+        .toList();
   }
 
   void _showSortOptions() {
@@ -430,8 +384,6 @@ class _ShowProductAllState extends State<ShowProductAll2> {
             setState(() {
               this.filteredOptions = filteredOptions;
             });
-            // fetchProductsWithFilter();
-            fetchProductsWithFilter(filteredOptions);
           },
         );
       },
@@ -455,25 +407,23 @@ class CustomFilter extends StatefulWidget {
 
 class _CustomFilterState extends State<CustomFilter> {
   List<String> optionSize = [
-    "All",
-    "Small",
-    "Medium",
-    "Large",
+    "Oil",
+    "Flour",
+    "Dal",
+    "Rice",
   ];
 
   List<String> optionsColor = [
-    "All",
-    "White",
-    "Black",
-    "Multicolor",
+    "1/2 KG",
+    "1 KG",
+    "5 KG",
+    "10 KG",
   ];
 
   List<String> optionsStyle = [
-    "All",
-    "Traditional",
-    "Ethnic",
-    "Cartoon",
-    "Colorful",
+    "Organic",
+    "Fresh Picked",
+    "Regular",
   ];
 
   List<String> selectedSize = [];
@@ -483,9 +433,9 @@ class _CustomFilterState extends State<CustomFilter> {
   @override
   void initState() {
     super.initState();
-    selectedSize = [optionSize[0]];
-    selectedColor = [optionsColor[0]];
-    selectedStyle = [optionsStyle[0]];
+    selectedSize = [];
+    selectedColor = [];
+    selectedStyle = [];
   }
 
   @override
@@ -552,7 +502,7 @@ class _CustomFilterState extends State<CustomFilter> {
                       const Padding(
                         padding: EdgeInsets.only(top: 10.0),
                         child: Text(
-                          "Size",
+                          "Category",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 15.0,
@@ -584,7 +534,7 @@ class _CustomFilterState extends State<CustomFilter> {
                       const Padding(
                         padding: EdgeInsets.only(top: 10.0),
                         child: Text(
-                          "Color",
+                          "Quantity",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 15.0,
@@ -617,7 +567,7 @@ class _CustomFilterState extends State<CustomFilter> {
                       const Padding(
                         padding: EdgeInsets.only(top: 10.0),
                         child: Text(
-                          "Style",
+                          "Picks",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 15.0,
