@@ -2,6 +2,8 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:demoapp/cust_cards/cust_card_row.dart';
 import 'package:demoapp/dashboard_pages/search.dart';
+import 'package:demoapp/featured_items.dart';
+import 'package:demoapp/featureditems.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -29,10 +31,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   List<String> imageUrls = [
-    "https://img.freepik.com/free-vector/flat-design-food-sale-background_23-2149219274.jpg?t=st=1717073699~exp=1717077299~hmac=153bd6bb5225d93c2c8ae2c0e1945fdecef53d8d1dafd242f1c0e9cf6485ac03&w=1380",
-    "https://img.freepik.com/free-vector/flat-design-food-facebook-ad_23-2149219269.jpg?t=st=1717073757~exp=1717077357~hmac=370c8a6ab0b2f1f13ef290c53fd06d1c888a52c712a73ed371598f6bea8d1170&w=1060",
-    "https://img.freepik.com/free-vector/hand-drawn-supermarket-facebook-cover_23-2150389222.jpg?t=st=1717073849~exp=1717077449~hmac=5c1b73382e1e719f30b0542e06e8ae6027198bc146f915a6a12933bcc0f3135a&w=1380",
-    "https://img.freepik.com/free-psd/flat-design-natural-market-facebook-template_23-2149701901.jpg?t=st=1717073871~exp=1717077471~hmac=1c168e1319f1810bc0c0cd4825d1476c4472cd31a094864c337674da3268adb3&w=1380"
+    "https://firebasestorage.googleapis.com/v0/b/grocery-app-e599b.appspot.com/o/b2.jpg?alt=media&token=8aff418d-6666-4cb8-99c9-11458976b4b1",
+    "https://firebasestorage.googleapis.com/v0/b/grocery-app-e599b.appspot.com/o/b3.jpg?alt=media&token=b04908ad-4c37-4d86-bb61-6efba038fa34",
+    "https://firebasestorage.googleapis.com/v0/b/grocery-app-e599b.appspot.com/o/b1.jpg?alt=media&token=4afe2f48-7ed0-4dfa-8be0-6ccd0b287c3e",
   ];
 
   @override
@@ -176,224 +177,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   top: 20,
                   bottom: 0,
                 ),
+                const FeaturedItems3(),
 
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(
-                      12.0,
-                    ),
-                    color: Colors.green.shade100,
-                  ),
-                  margin: const EdgeInsets.only(
-                    left: 18.0,
-                    right: 18.0,
-                    top: 15.0,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          top: 8.0,
-                          left: 10.0,
-                        ),
-                        child: Text(
-                          "Categories",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18.0,
-                            fontFamily: GoogleFonts.tiltNeon().fontFamily,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 0.0, bottom: 10.0),
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: [
-                              Column(
-                                children: [
-                                  RoundedImage(
-                                    imageUrl: "assets/images/oil.jpg",
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              const ShowProductAll2(),
-                                        ),
-                                      );
-                                    },
-                                    size: 55,
-                                  ),
-                                  const Padding(
-                                    padding: EdgeInsets.only(
-                                      top: 7.0,
-                                      left: 8.0,
-                                    ),
-                                    child: SizedBox(
-                                      width: 60.0,
-                                      child: Center(
-                                        child: Text(
-                                          "Oil",
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Column(
-                                children: [
-                                  RoundedImage(
-                                    imageUrl: "assets/images/flour.jpg",
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              const ShowProductAll2(),
-                                        ),
-                                      );
-                                    },
-                                    size: 55,
-                                  ),
-                                  const Padding(
-                                    padding: EdgeInsets.only(
-                                      top: 7.0,
-                                      left: 8.0,
-                                    ),
-                                    child: SizedBox(
-                                      width: 60.0,
-                                      child: Center(
-                                        child: Text(
-                                          "Flour",
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Column(
-                                children: [
-                                  RoundedImage(
-                                    imageUrl: "assets/images/vegetable.jpg",
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              const ShowProductAll2(),
-                                        ),
-                                      );
-                                    },
-                                    size: 55,
-                                  ),
-                                  const Padding(
-                                    padding: EdgeInsets.only(
-                                      top: 7.0,
-                                      left: 8.0,
-                                    ),
-                                    child: SizedBox(
-                                      width: 60.0,
-                                      child: Center(
-                                        child: Text(
-                                          "Vegetables",
-                                          style: TextStyle(
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Column(
-                                children: [
-                                  RoundedImage(
-                                    imageUrl: "assets/images/acc.jpg",
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              const ShowProductAll2(),
-                                        ),
-                                      );
-                                    },
-                                    size: 55,
-                                  ),
-                                  const Padding(
-                                    padding: EdgeInsets.only(
-                                      top: 7.0,
-                                      left: 8.0,
-                                    ),
-                                    child: SizedBox(
-                                      width: 60.0,
-                                      child: Center(
-                                        child: Text(
-                                          "Accessories",
-                                          style: TextStyle(
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(right: 10.0),
-                                child: Column(
-                                  children: [
-                                    RoundedImage(
-                                      imageUrl: "assets/images/nec.jpeg",
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                const ShowProductAll2(),
-                                          ),
-                                        );
-                                      },
-                                      size: 55,
-                                    ),
-                                    const Padding(
-                                      padding: EdgeInsets.only(
-                                        top: 7.0,
-                                        left: 8.0,
-                                      ),
-                                      child: SizedBox(
-                                        width: 60.0,
-                                        child: Center(
-                                          child: Text(
-                                            "Essentials",
-                                            style: TextStyle(
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                const Space(
+                  top: 22,
+                  bottom: 0,
                 ),
+                const FeaturedItems2(),
 
-                // title 2
                 const Space(
                   top: 22,
                   bottom: 0,
@@ -404,7 +195,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     left: 25.0,
                   ),
                   child: Text(
-                    "Featured Products for You",
+                    "Featured Instruments for You",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 18.0,
@@ -455,7 +246,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     left: 20.0,
                   ),
                   child: Text(
-                    "Fresh for you...",
+                    "Picked for you...",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 18.0,

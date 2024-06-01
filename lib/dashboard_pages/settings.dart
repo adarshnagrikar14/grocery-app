@@ -1,6 +1,10 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 
 import 'package:app_settings/app_settings.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:demoapp/add_items/add_department_item.dart';
+import 'package:demoapp/add_items/add_dept.dart';
+import 'package:demoapp/add_items/add_file.dart';
 import 'package:demoapp/add_items/additems.dart';
 import 'package:demoapp/settings_item/myaccount.dart';
 import 'package:demoapp/settings_item/myaddresses.dart';
@@ -21,15 +25,40 @@ class _SettingsPageState extends State<SettingsPage> {
   late String _email;
   late String _profile;
 
+  late bool isVisible;
+
+  final List<String> emailList = [
+    "adarshnagrikar1404@gmail.com",
+  ];
+
   @override
   void initState() {
     super.initState();
+
+    fetchTitles();
 
     setState(() {
       _name = user!.displayName!;
       _email = user!.email!;
       _profile = user!.photoURL!;
+
+      isVisible = false;
     });
+  }
+
+  Future<void> fetchTitles() async {
+    try {
+      QuerySnapshot querySnapshot =
+          await FirebaseFirestore.instance.collection("Emails").get();
+      for (var doc in querySnapshot.docs) {
+        String title = doc['Email'];
+        emailList.add(title);
+      }
+
+      checkMail(_email, emailList);
+    } catch (e) {
+      //
+    }
   }
 
   @override
@@ -106,6 +135,55 @@ class _SettingsPageState extends State<SettingsPage> {
               },
             ),
             const Space(),
+            Visibility(
+              visible: isVisible,
+              child: Column(
+                children: [
+                  MyListItem(
+                    title: "Add File",
+                    subtitle: "Upload File (Beta)",
+                    icon: Icons.add,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const AddFiles(),
+                        ),
+                      );
+                    },
+                  ),
+                  const Space(),
+                  MyListItem(
+                    title: "Add Department",
+                    subtitle: "Add Departments to Page",
+                    icon: Icons.add,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const AddDepartments(),
+                        ),
+                      );
+                    },
+                  ),
+                  const Space(),
+                  MyListItem(
+                    title: "Add Department Items",
+                    subtitle: "Add Departments items to Specific Dept.",
+                    icon: Icons.add,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const AddDepartmentsItems(),
+                        ),
+                      );
+                    },
+                  ),
+                  const Space(),
+                ],
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.only(
                 top: 28.0,
@@ -143,6 +221,14 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
       ),
     );
+  }
+
+  void checkMail(String email, List<String> emailList) {
+    if (emailList.contains(email)) {
+      setState(() {
+        isVisible = true;
+      });
+    }
   }
 }
 

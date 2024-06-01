@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:demoapp/show_more/show_more_af_2.dart';
 import 'package:flutter/material.dart';
 
@@ -15,6 +16,8 @@ class _SearchPageState extends State<SearchPage> {
   @override
   void initState() {
     super.initState();
+
+    fetchTitles();
     _searchFocusNode = FocusNode();
     _searchController = TextEditingController();
 
@@ -36,28 +39,7 @@ class _SearchPageState extends State<SearchPage> {
     });
   }
 
-  final List<String> groceryList = [
-    'Milk',
-    'Bread',
-    'Eggs',
-    'Butter',
-    'Cheese',
-    'Chicken Breast',
-    'Ground Beef',
-    'Lettuce',
-    'Tomatoes',
-    'Onions',
-    'Potatoes',
-    'Carrots',
-    'Apples',
-    'Bananas',
-    'Orange Juice',
-    'Rice',
-    'Pasta',
-    'Cereal',
-    'Yogurt',
-    'Frozen Vegetables',
-  ];
+  final List<String> groceryList = [];
 
   List<String> searchResults = [];
 
@@ -150,5 +132,18 @@ class _SearchPageState extends State<SearchPage> {
         ),
       ),
     );
+  }
+
+  Future<void> fetchTitles() async {
+    try {
+      QuerySnapshot querySnapshot =
+          await FirebaseFirestore.instance.collection("All").get();
+      for (var doc in querySnapshot.docs) {
+        String title = doc['Title'];
+        groceryList.add(title);
+      }
+    } catch (e) {
+      //
+    }
   }
 }

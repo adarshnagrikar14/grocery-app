@@ -123,7 +123,7 @@ class _MainScreenState extends State<MainScreen> {
                 const SizedBox(
                   width: 12.0,
                 ),
-                const AnimationText(title: "Grocery Store"),
+                const AnimationText(title: "Biomed Manthan"),
               ],
             ),
           ),
